@@ -118,7 +118,7 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "timezones-list": "^3.0.3",
-    "uuid": "^11.0.5",
+    "uuid": "^11.1.0",
     "vaul": "^1.1.2",
     "workbox-precaching": "^7.3.0",
     "zod": "^3.23.8"
