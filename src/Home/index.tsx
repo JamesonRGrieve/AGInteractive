@@ -1,4 +1,4 @@
-import PricingGrid from '@/auth/stripe/PricingTable';
+import PricingGrid from '@/auth/Stripe/PricingTable';
 import { CallToAction } from '@/interactive/Home/call-to-action';
 import { Contact } from '@/interactive/Home/contact';
 import { Features } from '@/interactive/Home/features';
