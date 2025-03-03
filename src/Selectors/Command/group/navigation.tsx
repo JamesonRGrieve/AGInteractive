@@ -1,4 +1,4 @@
-import { navItems } from '@/appwrapper/NavMain';
+import { navItems } from '@/app/NavMain';
 import { CommandGroup, CommandSeparator } from '@/components/ui/command';
 import { ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
