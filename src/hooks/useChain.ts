@@ -1,6 +1,6 @@
+import log from '@/next-log/log';
 import useSWR, { SWRResponse } from 'swr';
 import { z } from 'zod';
-import log from '../@/next-log/log';
 import { createGraphQLClient } from './lib';
 
 export const ChainStepPromptSchema = z.object({
