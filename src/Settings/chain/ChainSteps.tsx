@@ -1,8 +1,8 @@
 'use client';
 
-import { useInteractiveConfig } from '@/components/interactive/InteractiveConfigContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { useInteractiveConfig } from '@/interactive/InteractiveConfigContext';
 import { PlusCircle as LuPlusCircle } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useChain } from '../../hooks/useChain';

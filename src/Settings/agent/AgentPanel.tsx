@@ -1,9 +1,9 @@
 'use client';
 
 import { useCompany } from '@/auth/hooks/useUser';
-import { useInteractiveConfig } from '@/components/interactive/InteractiveConfigContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useInteractiveConfig } from '@/interactive/InteractiveConfigContext';
 import axios from 'axios';
 import { getCookie, setCookie } from 'cookies-next';
 import { usePathname, useRouter } from 'next/navigation';

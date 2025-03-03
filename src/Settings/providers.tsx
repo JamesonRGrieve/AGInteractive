@@ -1,8 +1,6 @@
 'use client';
 
 import { useCompany } from '@/auth/hooks/useUser';
-import MarkdownBlock from '@/components/interactive/Chat/Message/MarkdownBlock';
-import { useInteractiveConfig } from '@/components/interactive/InteractiveConfigContext';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,6 +14,8 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import MarkdownBlock from '@/interactive/Chat/Message/MarkdownBlock';
+import { useInteractiveConfig } from '@/interactive/InteractiveConfigContext';
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
 import { Plus, Wrench } from 'lucide-react';
