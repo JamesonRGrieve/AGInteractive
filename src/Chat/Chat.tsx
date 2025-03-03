@@ -2,11 +2,11 @@
 
 import { SidebarContent } from '@/appwrapper/SidebarContentManager';
 import { useCompany } from '@/auth/hooks/useUser';
-import log from '@/components/jrg/next-log/log';
 import { Input } from '@/components/ui/input';
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { toast } from '@/hooks/useToast';
 import { InteractiveConfigContext, Overrides } from '@/interactiveConfigContext';
+import log from '@/next-log/log';
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
 import { Badge, Check, Download, Paperclip, Pencil, Plus, Trash2, Upload } from 'lucide-react';

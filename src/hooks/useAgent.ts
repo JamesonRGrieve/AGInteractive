@@ -5,7 +5,7 @@ import { useContext } from 'react';
 import useSWR, { SWRResponse } from 'swr';
 import { z } from 'zod';
 import { useCompanies } from '../../jrg/auth/hooks/useUser';
-import log from '../../jrg/next-log/log';
+import log from '../@/next-log/log';
 import { chainMutations, createGraphQLClient } from './lib';
 
 export const AgentSchema = z.object({

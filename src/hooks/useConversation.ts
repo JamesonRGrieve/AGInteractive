@@ -3,7 +3,7 @@ import useSWR, { SWRResponse } from 'swr';
 // Import all types from the centralized schema file
 import { RoleSchema, UserSchema } from '@/auth/hooks/useUser';
 import { z } from 'zod';
-import log from '../../jrg/next-log/log';
+import log from '../@/next-log/log';
 import { createGraphQLClient } from './lib';
 
 export const ConversationMetadataSchema = z.object({

@@ -9,7 +9,7 @@
 // import { useRouter } from 'next/navigation';
 // import { z } from 'zod';
 // import { useCompanies } from '../jrg/auth/hooks/useTeam';
-// import log from '../jrg/next-log/log';
+// import log from '@/next-log/log';
 // import { InteractiveConfigContext, useInteractiveConfig } from './InteractiveConfigContext';
 // import {
 //   Agent,

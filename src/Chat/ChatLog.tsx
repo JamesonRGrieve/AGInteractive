@@ -1,6 +1,6 @@
 'use client';
 
-import log from '@/components/jrg/next-log/log';
+import log from '@/next-log/log';
 import React, { useEffect, useRef } from 'react';
 import { Activity as ChatActivity } from './Activity';
 import Message from './Message/Message';

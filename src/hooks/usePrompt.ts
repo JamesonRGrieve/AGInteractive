@@ -3,7 +3,7 @@ import { useInteractiveConfig } from '@/interactiveConfigContext';
 import { useRouter } from 'next/navigation';
 import useSWR, { SWRResponse } from 'swr';
 import { z } from 'zod';
-import log from '../../jrg/next-log/log';
+import log from '../@/next-log/log';
 import { createGraphQLClient } from './lib';
 
 export const PromptArgumentSchema = z.object({
