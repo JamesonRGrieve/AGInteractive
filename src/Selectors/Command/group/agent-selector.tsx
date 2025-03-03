@@ -1,7 +1,7 @@
 'use client';
 
+import { useCompany } from '@/auth/hooks/useUser';
 import { useAgent, useAgents } from '@/components/interactive/hooks/useAgent';
-import { useCompany } from '@/components/jrg/auth/hooks/useUser';
 import { CommandGroup, CommandItem } from '@/components/ui/command';
 import { setCookie } from 'cookies-next';
 import { Bot, Check } from 'lucide-react';

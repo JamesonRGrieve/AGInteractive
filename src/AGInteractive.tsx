@@ -1,5 +1,5 @@
 'use client';
-import Gravatar from '@/components/jrg/auth/management/Gravatar';
+import Gravatar from '@/auth/management/Gravatar';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import axios from 'axios';

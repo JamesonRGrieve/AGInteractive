@@ -1,7 +1,7 @@
 'use client';
 
 import { SidebarContent } from '@/appwrapper/SidebarContentManager';
-import { useCompany } from '@/components/jrg/auth/hooks/useUser';
+import { useCompany } from '@/auth/hooks/useUser';
 import log from '@/components/jrg/next-log/log';
 import { Input } from '@/components/ui/input';
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';

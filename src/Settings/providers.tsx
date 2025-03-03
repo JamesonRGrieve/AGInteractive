@@ -1,18 +1,18 @@
 'use client';
 
+import { useCompany } from '@/auth/hooks/useUser';
 import MarkdownBlock from '@/components/interactive/Chat/Message/MarkdownBlock';
 import { useInteractiveConfig } from '@/components/interactive/InteractiveConfigContext';
-import { useCompany } from '@/components/jrg/auth/hooks/useUser';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

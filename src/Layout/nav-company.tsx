@@ -1,14 +1,14 @@
 'use client';
 
-import { getGravatarUrl } from '@/components/jrg/auth/gravatar';
-import { useCompanies, useCompany, useUser } from '@/components/jrg/auth/hooks/useUser';
+import { getGravatarUrl } from '@/auth/gravatar';
+import { useCompanies, useCompany, useUser } from '@/auth/hooks/useUser';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';

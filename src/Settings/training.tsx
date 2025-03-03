@@ -1,5 +1,5 @@
 'use client';
-import { useCompany } from '@/components/jrg/auth/hooks/useUser';
+import { useCompany } from '@/auth/hooks/useUser';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,17 +10,17 @@ import { getCookie } from 'cookies-next';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  LuBrain as Brain,
-  LuFile,
-  LuImage,
-  LuLink,
-  LuMessageSquare,
-  LuMic,
-  LuNewspaper,
-  LuThumbsUp,
-  LuYoutube,
-  LuTrash2 as Trash2,
-  LuUpload as Upload,
+    LuBrain as Brain,
+    LuFile,
+    LuImage,
+    LuLink,
+    LuMessageSquare,
+    LuMic,
+    LuNewspaper,
+    LuThumbsUp,
+    LuYoutube,
+    LuTrash2 as Trash2,
+    LuUpload as Upload,
 } from 'react-icons/lu';
 
 interface SourceDisplayProps {
