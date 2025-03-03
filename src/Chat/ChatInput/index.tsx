@@ -4,7 +4,7 @@ import { DropZone } from '@/components/jrg/dropzone/DropZone';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { TooltipBasic } from '@/components/ui/tooltip';
-import { InteractiveConfigContext } from '@/interactiveConfigContext';
+import { InteractiveConfigContext } from '@/interactive/InteractiveConfigContext';
 import { cn } from '@/lib/utils';
 import { setCookie } from 'cookies-next';
 import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react';

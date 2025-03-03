@@ -1,5 +1,5 @@
 import { useCompany } from '@/auth/hooks/useUser';
-import { InteractiveConfigContext } from '@/interactiveConfigContext';
+import { InteractiveConfigContext } from '@/interactive/InteractiveConfigContext';
 import { getCookie } from 'cookies-next';
 import { useContext } from 'react';
 import useSWR from 'swr';

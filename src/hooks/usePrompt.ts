@@ -1,5 +1,5 @@
 import { useToast } from '@/hooks/useToast';
-import { useInteractiveConfig } from '@/interactiveConfigContext';
+import { useInteractiveConfig } from '@/interactive/InteractiveConfigContext';
 import { useRouter } from 'next/navigation';
 import useSWR, { SWRResponse } from 'swr';
 import { z } from 'zod';

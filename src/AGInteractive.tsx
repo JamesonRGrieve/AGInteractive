@@ -1,4 +1,5 @@
 'use client';
+import AppWrapper from '@/appwrapper/AppWrapper';
 import Gravatar from '@/auth/management/Gravatar';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -9,7 +10,6 @@ import { useSearchParams } from 'next/navigation';
 import React, { ReactNode, useEffect, useMemo, useState } from 'react';
 import { LuMenu as Menu } from 'react-icons/lu';
 import useSWR from 'swr';
-import AppWrapper from '../jrg/appwrapper/AppWrapper';
 import Chat from './Chat/Chat';
 import ContextWrapper from './ContextWrapper';
 import Form from './Form/Form';

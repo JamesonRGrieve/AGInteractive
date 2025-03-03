@@ -5,7 +5,7 @@ import { useCompany } from '@/auth/hooks/useUser';
 import { Input } from '@/components/ui/input';
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { toast } from '@/hooks/useToast';
-import { InteractiveConfigContext, Overrides } from '@/interactiveConfigContext';
+import { InteractiveConfigContext, Overrides } from '@/interactive/InteractiveConfigContext';
 import log from '@/next-log/log';
 import axios from 'axios';
 import { getCookie } from 'cookies-next';

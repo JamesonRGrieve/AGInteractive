@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { InteractiveConfigContext } from '@/interactiveConfigContext';
+import { InteractiveConfigContext } from '@/interactive/InteractiveConfigContext';
 import { setCookie } from 'cookies-next';
 import { CheckCircle as LuCheckCircle } from 'lucide-react';
 import React, { ReactNode, useContext, useEffect, useState } from 'react';

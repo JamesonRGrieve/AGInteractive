@@ -1,4 +1,4 @@
-import { InteractiveConfigContext } from '@/interactiveConfigContext';
+import { InteractiveConfigContext } from '@/interactive/InteractiveConfigContext';
 import axios from 'axios';
 import { getCookie, setCookie } from 'cookies-next';
 import { useContext } from 'react';

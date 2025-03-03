@@ -6,7 +6,7 @@ import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { getTimeDifference } from '@/interactive/Chat/Activity';
-import { InteractiveConfigContext } from '@/interactiveConfigContext';
+import { InteractiveConfigContext } from '@/interactive/InteractiveConfigContext';
 import { cn } from '@/lib/utils';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import dayjs from 'dayjs';

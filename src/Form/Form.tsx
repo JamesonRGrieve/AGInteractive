@@ -1,4 +1,4 @@
-import { InteractiveConfigContext, Overrides } from '@/interactiveConfigContext';
+import { InteractiveConfigContext, Overrides } from '@/interactive/InteractiveConfigContext';
 import { useContext, useEffect, useState } from 'react';
 import useSWR, { mutate } from 'swr';
 import { v4 as uuidv4 } from 'uuid';
