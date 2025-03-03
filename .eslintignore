@@ -1,3 +1,1 @@
-app
-next.config.js
-public/sw.js
+dist/*

@@ -1,10 +1,11 @@
 {
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
+    "ecmaVersion": 2015,
+    "sourceType": "module",
     "project": "./tsconfig.json" // Adjust the path to your tsconfig.json file
   },
   "extends": [
-    "next/core-web-vitals",
     "prettier",
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -19,7 +20,8 @@
     "plugin:promise/recommended",
     "plugin:react-hooks/recommended",
     "plugin:react/recommended",
-    "plugin:sonarjs/recommended"
+    "plugin:sonarjs/recommended",
+    "plugin:storybook/recommended"
   ],
   "plugins": [
     "@typescript-eslint",
@@ -34,6 +36,7 @@
     "react",
     "security",
     "sonarjs",
+    "storybook",
     "unused-imports"
   ],
   "rules": {
@@ -43,7 +46,6 @@
     "import/no-named-as-default": "warn", // Warn on using named export as the default export.
     "jsx-a11y/aria-role": "warn", // Enforce the use of valid values for the role attribute.
     "jsx-a11y/no-redundant-roles": "warn", // Enforce that elements with ARIA roles must use a valid, non-abstract ARIA role.
-    "@typescript-eslint/ban-ts-comment": "warn",
     "prettier/prettier": [
       "warn",
       {
@@ -82,6 +84,7 @@
     "@typescript-eslint/no-namespace": "warn", // Disallow the use of custom TypeScript modules and namespaces.
     "@typescript-eslint/no-unused-expressions": "warn", // Disallow unused expressions.
     "@typescript-eslint/no-var-requires": "warn", // Disallow the use of `require` statements except in import statements.
+    "curly": ["warn", "all"], // Require consistent brace style for all control statements.
     "eqeqeq": ["warn", "always"], // Enforce the use of === and !== over == and !=.
     "eslint-comments/no-unused-disable": "warn", // Disallow unused eslint-disable comments.
     "import/newline-after-import": "warn", // Enforce a newline after import statements.
@@ -128,7 +131,6 @@
     "promise/no-return-in-finally": "warn", // Avoid returning values from finally blocks in promises.
     "promise/no-return-wrap": "warn", // Avoid wrapping values in Promise.resolve or Promise.reject when not needed.
     "react-hooks/rules-of-hooks": "warn", // Checks rules of Hooks.
-    "react/react-in-jsx-scope": "off", // Prevent missing React when using JSX.
     "react/jsx-boolean-value": "warn", // Enforce shorthand for boolean values in JSX.
     "react/jsx-closing-bracket-location": "warn", // Enforce the closing bracket location for JSX multiline elements.
     "react/jsx-closing-tag-location": "warn", // Enforce closing tag location in JSX.
@@ -143,6 +145,7 @@
     "react/jsx-no-comment-textnodes": "warn", // Comments inside children section of tag should be placed inside braces.
     "react/jsx-no-duplicate-props": "warn", // Disallow duplicate props in JSX.
     "react/jsx-no-target-blank": "warn", // Disallow target="_blank" attribute without rel="noreferrer".
+    "react/react-in-jsx-scope": "off", // Legacy rule
     "react/jsx-no-undef": "error", // Disallow undeclared variables in JSX.
     "react/jsx-no-useless-fragment": "warn", // Disallow unnecessary fragments.
     "react/jsx-pascal-case": "warn", // Enforce PascalCase for user-defined JSX components.
@@ -215,18 +218,26 @@
     "jsx-a11y/no-autofocus": "warn", // Enforce no autofocus on elements.
     "react/no-access-state-in-setstate": "warn" // Warns about using state in setState calls.
   },
+  "overrides": [
+    {
+      "files": [".storybook/*"],
+      "rules": {
+        "storybook/await-interactions": "warn",
+        "storybook/context-in-play-function": "warn",
+        "storybook/default-exports": "warn",
+        "storybook/hierarchy-separator": "warn",
+        "storybook/no-redundant-story-name": "warn",
+        "storybook/no-uninstalled-addons": "warn",
+        "storybook/prefer-pascal-case": "warn",
+        "storybook/story-exports": "warn",
+        "storybook/use-storybook-expect": "warn",
+        "storybook/use-storybook-testing-library": "warn"
+      }
+    }
+  ],
   "settings": {
     "react": {
       "version": "detect"
     }
-  },
-  "overrides": [
-    {
-      "files": ["*.tsx"],
-      "rules": {
-        "@typescript-eslint/explicit-function-return-type": "off",
-        "@typescript-eslint/explicit-module-boundary-types": "off"
-      }
-    }
-  ]
+  }
 }
