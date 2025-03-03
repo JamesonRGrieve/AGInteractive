@@ -1,8 +1,8 @@
 import { useCompany } from '@/components/jrg/auth/hooks/useUser';
+import { InteractiveConfigContext } from '@/interactiveConfigContext';
 import { getCookie } from 'cookies-next';
 import { useContext } from 'react';
 import useSWR from 'swr';
-import { InteractiveConfigContext } from '../InteractiveConfigContext';
 
 export function useOldCompanies() {
   const state = useContext(InteractiveConfigContext);

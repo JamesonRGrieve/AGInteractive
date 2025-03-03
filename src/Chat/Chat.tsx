@@ -1,11 +1,12 @@
 'use client';
 
-import { SidebarContent } from '@/components/jrg/appwrapper/SidebarContentManager';
+import { SidebarContent } from '@/appwrapper/SidebarContentManager';
 import { useCompany } from '@/components/jrg/auth/hooks/useUser';
 import log from '@/components/jrg/next-log/log';
 import { Input } from '@/components/ui/input';
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { toast } from '@/hooks/useToast';
+import { InteractiveConfigContext, Overrides } from '@/interactiveConfigContext';
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
 import { Badge, Check, Download, Paperclip, Pencil, Plus, Trash2, Upload } from 'lucide-react';
@@ -13,7 +14,6 @@ import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import useSWR, { mutate } from 'swr';
 import { UIProps } from '../AGInteractive';
-import { InteractiveConfigContext, Overrides } from '../InteractiveConfigContext';
 import { useConversations } from '../hooks/useConversation';
 import ChatBar from './ChatInput';
 import ChatLog from './ChatLog';

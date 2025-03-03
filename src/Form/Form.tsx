@@ -1,9 +1,9 @@
+import { InteractiveConfigContext, Overrides } from '@/interactiveConfigContext';
 import { useContext, useEffect, useState } from 'react';
 import useSWR, { mutate } from 'swr';
 import { v4 as uuidv4 } from 'uuid';
 import { UIProps } from '../AGInteractive';
 import ConversationBar from '../Chat/ChatBar';
-import { InteractiveConfigContext, Overrides } from '../InteractiveConfigContext';
 import FormInput from './FormInput';
 import FormOutput from './FormOutput';
 

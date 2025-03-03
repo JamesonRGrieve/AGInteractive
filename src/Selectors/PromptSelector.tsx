@@ -3,9 +3,9 @@
 import usePathname from '@/components/jrg/auth/hooks/usePathname';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { InteractiveConfigContext } from '@/interactiveConfigContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useContext, useEffect } from 'react';
-import { InteractiveConfigContext } from '../InteractiveConfigContext';
 import { usePrompts } from '../hooks/usePrompt';
 
 export default function PromptSelector({

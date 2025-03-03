@@ -1,3 +1,4 @@
+import { InteractiveConfigContext } from '@/interactiveConfigContext';
 import axios from 'axios';
 import { getCookie, setCookie } from 'cookies-next';
 import { useContext } from 'react';
@@ -5,7 +6,6 @@ import useSWR, { SWRResponse } from 'swr';
 import { z } from 'zod';
 import { useCompanies } from '../../jrg/auth/hooks/useUser';
 import log from '../../jrg/next-log/log';
-import { InteractiveConfigContext } from '../InteractiveConfigContext';
 import { chainMutations, createGraphQLClient } from './lib';
 
 export const AgentSchema = z.object({

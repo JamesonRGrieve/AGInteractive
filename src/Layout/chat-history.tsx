@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { getTimeDifference } from '@/interactive/Chat/Activity';
+import { InteractiveConfigContext } from '@/interactiveConfigContext';
 import { cn } from '@/lib/utils';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import dayjs from 'dayjs';
@@ -12,7 +13,6 @@ import { useContext } from 'react';
 import { Command, CommandInput, CommandItem, CommandList } from '../../ui/command';
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from '../../ui/dialog';
 import { Conversation, useConversations } from '../hooks/useConversation';
-import { InteractiveConfigContext } from '../InteractiveConfigContext';
 
 export function ChatHistory() {
   const state = useContext(InteractiveConfigContext);

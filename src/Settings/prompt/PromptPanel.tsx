@@ -1,6 +1,6 @@
 'use client';
 
-import { SidebarContent } from '@/components/jrg/appwrapper/SidebarContentManager';
+import { SidebarContent } from '@/appwrapper/SidebarContentManager';
 import IconButton from '@/components/jrg/theme/IconButton';
 import { Input } from '@/components/ui/input';
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';

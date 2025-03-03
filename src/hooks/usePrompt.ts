@@ -1,9 +1,9 @@
 import { useToast } from '@/hooks/useToast';
+import { useInteractiveConfig } from '@/interactiveConfigContext';
 import { useRouter } from 'next/navigation';
 import useSWR, { SWRResponse } from 'swr';
 import { z } from 'zod';
 import log from '../../jrg/next-log/log';
-import { useInteractiveConfig } from '../InteractiveConfigContext';
 import { createGraphQLClient } from './lib';
 
 export const PromptArgumentSchema = z.object({

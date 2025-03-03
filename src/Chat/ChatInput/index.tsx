@@ -1,16 +1,16 @@
 'use client';
 
-import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react';
-import { setCookie } from 'cookies-next';
-import { BiCollapseVertical } from 'react-icons/bi';
-import { InteractiveConfigContext } from '../../InteractiveConfigContext';
-import { VoiceRecorder } from '../VoiceRecorder';
-import { ListUploadedFiles, OverrideSwitches, ResetConversation, SendMessage, Timer, UploadFiles } from './Adornments';
-import { Textarea } from '@/components/ui/textarea';
 import { DropZone } from '@/components/jrg/dropzone/DropZone';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Textarea } from '@/components/ui/textarea';
 import { TooltipBasic } from '@/components/ui/tooltip';
+import { InteractiveConfigContext } from '@/interactiveConfigContext';
+import { cn } from '@/lib/utils';
+import { setCookie } from 'cookies-next';
+import React, { ReactNode, useContext, useEffect, useRef, useState } from 'react';
+import { BiCollapseVertical } from 'react-icons/bi';
+import { VoiceRecorder } from '../VoiceRecorder';
+import { ListUploadedFiles, OverrideSwitches, ResetConversation, SendMessage, Timer, UploadFiles } from './Adornments';
 
 export default function ChatBar({
   onSend,
