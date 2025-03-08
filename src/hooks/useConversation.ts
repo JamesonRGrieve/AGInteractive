@@ -4,6 +4,7 @@ import useSWR, { SWRResponse } from 'swr';
 import log from '@/next-log/log';
 import { z } from 'zod';
 import { createGraphQLClient } from './lib';
+import { ConversationEdge, ConversationEdgeSchema } from './z';
 
 // ============================================================================
 // Conversation Related Hooks
