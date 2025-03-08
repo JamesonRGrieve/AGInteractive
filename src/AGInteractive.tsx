@@ -10,13 +10,13 @@ import { useSearchParams } from 'next/navigation';
 import React, { ReactNode, useEffect, useMemo, useState } from 'react';
 import { LuMenu as Menu } from 'react-icons/lu';
 import useSWR from 'swr';
+import { AgentSelector } from '../../interface/Selectors/AgentSelector';
+import PromptSelector from '../../interface/Selectors/PromptSelector';
 import Chat from './Chat/Chat';
 import ContextWrapper from './ContextWrapper';
 import Form from './Form/Form';
 import { InteractiveConfig, InteractiveConfigDefault, Overrides } from './InteractiveConfigContext';
-import { AgentSelector } from './Selectors/AgentSelector';
 import ConversationSelector from './Selectors/ConversationSelector';
-import PromptSelector from './Selectors/PromptSelector';
 
 export type FormProps = {
   fieldOverrides?: { [key: string]: ReactNode };

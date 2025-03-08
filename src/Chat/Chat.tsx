@@ -1,7 +1,7 @@
 'use client';
 
 import { SidebarContent } from '@/appwrapper/SidebarContentManager';
-import { useCompany } from '@/auth/hooks/useUser';
+import { useTeam } from '@/auth/hooks/useTeam';
 import { Input } from '@/components/ui/input';
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { toast } from '@/hooks/useToast';
@@ -79,7 +79,7 @@ export default function Chat({
       refreshInterval: loading ? 1000 : 0,
     },
   );
-  const { data: activeCompany } = useCompany();
+  const { data: activeTeam } = useTeam();
   console.log('CONVERSATION DATA: ', conversation);
   useEffect(() => {
     if (Array.isArray(state.overrides.conversation)) {
@@ -104,7 +104,7 @@ export default function Chat({
           },
         })), // Spread operator to include all file contents
       ],
-      ...(activeCompany?.id ? { company_id: activeCompany?.id } : {}),
+      ...(activeTeam?.id ? { company_id: activeTeam?.id } : {}),
       ...(getCookie('aginteractive-create-image') ? { create_image: getCookie('aginteractive-create-image') } : {}),
       ...(getCookie('aginteractive-tts') ? { tts: getCookie('aginteractive-tts') } : {}),
       ...(getCookie('aginteractive-websearch') ? { websearch: getCookie('aginteractive-websearch') } : {}),

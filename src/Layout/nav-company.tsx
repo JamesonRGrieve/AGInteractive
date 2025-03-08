@@ -1,25 +1,25 @@
 'use client';
 
 import { getGravatarUrl } from '@/auth/gravatar';
-import { useCompanies, useCompany, useUser } from '@/auth/hooks/useUser';
+import { useTeam, useTeams, useUser } from '@/auth/hooks/useUser';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
 import { CaretSortIcon } from '@radix-ui/react-icons';
 
 export function NavCompany() {
-  const { data: company } = useCompany();
-  const { data: companies } = useCompanies();
+  const { data: company } = useTeam();
+  const { data: companies } = useTeams();
 
   const { data: user, mutate: mutateUser } = useUser();
-  const { data: activeCompany, mutate: mutateActiveCompany } = useCompany();
+  const { data: activeCompany, mutate: mutateActiveCompany } = useTeam();
 
   return (
     <SidebarMenu>

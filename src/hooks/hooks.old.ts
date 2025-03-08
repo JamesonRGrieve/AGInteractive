@@ -1,4 +1,4 @@
-import { useCompany } from '@/auth/hooks/useUser';
+import { useTeam } from '@/auth/hooks/useUser';
 import { InteractiveConfigContext } from '@/interactive/InteractiveConfigContext';
 import { getCookie } from 'cookies-next';
 import { useContext } from 'react';
@@ -29,7 +29,7 @@ export function useOldInvitations(company_id?: string) {
 }
 export function useOldActiveCompany() {
   const state = useContext(InteractiveConfigContext);
-  const { data: companyData } = useCompany();
+  const { data: companyData } = useTeam();
   return useSWR<any>(
     [`/companies`, companyData?.id ?? null],
     async () => {

@@ -24,6 +24,6 @@
       }
     ]
   },
-  "include": ["src/**/*", "src/index.ts", "src/Style/**/*.css"],
+  "include": ["src/**/*", "src/index.ts", "src/Style/**/*.css", "../interface/hooks/usePrompt.ts", "../interface/hooks/useProvider.ts", "../interface/hooks/z.ts", "../interface/hooks/useChain.ts", "../interface/hooks/useAgent.ts", "../interface/hooks/useCommand.ts", "../interface/Selectors/AgentSelector.tsx", "../interface/Selectors/PromptSelector.tsx", "../interface/Selectors/CommandSelector.tsx", "../interface/Selectors/ChainSelector.tsx"],
   "exclude": ["node_modules", "dist", "src/**/*.stories.*"]
 }
