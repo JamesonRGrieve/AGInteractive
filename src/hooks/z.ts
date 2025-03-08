@@ -55,16 +55,6 @@ export const AppStateSchema = z.object({
     user: UserSchema,
   }),
 });
-export const AppStateSchema = z.object({
-  state: z.object({
-    currentConversation: z.object({
-      messages: z.array(MessageSchema),
-      metadata: ConversationMetadataSchema,
-    }),
-    notifications: z.array(NotificationSchema),
-    user: UserSchema,
-  }),
-});
 export type Conversation = z.infer<typeof AppStateSchema>;
 export type ConversationEdge = z.infer<typeof ConversationEdgeSchema>;
 export type ConversationMetadata = z.infer<typeof ConversationMetadataSchema>;
