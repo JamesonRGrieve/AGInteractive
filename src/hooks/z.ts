@@ -1,25 +1,35 @@
 import { RoleSchema, UserSchema } from '@/auth/hooks/z';
 import { z } from 'zod';
+
 export const ConversationMetadataSchema = z.object({
-  agentId: z.string().uuid(),
-  attachmentCount: z.number().int().nonnegative(),
-  createdAt: z.string().datetime(),
-  hasNotifications: z.boolean(),
   id: z.string().uuid(),
   name: z.string().min(1),
-  summary: z.unknown(),
-  updatedAt: z.string().datetime(),
+  description: z.string().optional(),
+  userId: z.string().uuid(),
+  projectId: z.string().uuid(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime().optional(),
+  updatedByUser: z.string().uuid().optional(),
+  deletedAt: z.string().datetime().optional(),
+  deletedByUser: z.string().uuid().optional(),
 });
+
 export const MessageSchema = z.object({
   id: z.string().uuid(),
-  message: z.string().min(1),
   role: RoleSchema,
-  timestamp: z.string().datetime(),
+  content: z.string().min(1),
+  userId: z.string().uuid(),
+  conversationId: z.string().uuid(),
+  feedbackReceived: z.boolean().default(false),
+  notify: z.boolean().default(false),
+  createdAt: z.string().datetime(),
   updatedAt: z.string().datetime().optional(),
-  updatedBy: z.string().uuid().optional(),
-  feedbackReceived: z.boolean().optional(),
+  updatedByUser: z.string().uuid().optional(),
+  parentId: z.string().uuid().optional(),
 });
+
 export const ConversationSchema = z.object({
+  metadata: ConversationMetadataSchema,
   messages: z.array(MessageSchema),
 });
 
@@ -55,7 +65,8 @@ export const AppStateSchema = z.object({
     user: UserSchema,
   }),
 });
-export type Conversation = z.infer<typeof AppStateSchema>;
+
+export type Conversation = z.infer<typeof ConversationSchema>;
 export type ConversationEdge = z.infer<typeof ConversationEdgeSchema>;
 export type ConversationMetadata = z.infer<typeof ConversationMetadataSchema>;
 export type Message = z.infer<typeof MessageSchema>;
