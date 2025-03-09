@@ -1,4 +1,4 @@
-import { RoleSchema, UserSchema } from '@/auth/hooks/useUser';
+import { RoleSchema, UserSchema } from '@/auth/hooks/z';
 import { z } from 'zod';
 export const ConversationMetadataSchema = z.object({
   agentId: z.string().uuid(),
