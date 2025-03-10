@@ -190,7 +190,7 @@ export default function ChatBar({
 
 export function useDynamicInput(initialValue = '', uploadedFiles: { [x: string]: string }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(true);
   const [value, setValue] = useState(initialValue);
 
   useEffect(() => {
