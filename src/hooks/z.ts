@@ -1,181 +1,159 @@
 import { z } from 'zod';
 
-// Project schemas
+// Project schema based directly on the database model
 export const ProjectSchema = z.object({
   id: z.string().uuid(),
-  created_at: z.string(),
-  created_by_user: z.string().uuid(),
-  updated_at: z.string().optional(),
-  updated_by_user: z.string().uuid().optional(),
-  deleted_at: z.string().optional(),
-  deleted_by_user: z.string().uuid().optional(),
-  user_id: z.string().uuid(),
   name: z.string().min(1),
   description: z.string().nullable(),
+  userId: z.string().uuid(),
+  createdAt: z.string(),
+  createdByUser: z.string().uuid(),
+  updatedAt: z.string().optional(),
+  updatedByUser: z.string().uuid().optional(),
+  deletedAt: z.string().optional(),
+  deletedByUser: z.string().uuid().optional(),
 });
 
+// ProjectContextPrompt schema
 export const ProjectContextPromptSchema = z.object({
   id: z.string().uuid(),
-  created_at: z.string(),
-  created_by_user: z.string().uuid(),
-  updated_at: z.string().optional(),
-  updated_by_user: z.string().uuid().optional(),
-  deleted_at: z.string().optional(),
-  deleted_by_user: z.string().uuid().optional(),
-  prompt_id: z.string().uuid(),
-  project_id: z.string().uuid(),
+  promptId: z.string().uuid(),
+  projectId: z.string().uuid(),
+  createdAt: z.string(),
+  createdByUser: z.string().uuid(),
+  updatedAt: z.string().optional(),
+  updatedByUser: z.string().uuid().optional(),
+  deletedAt: z.string().optional(),
+  deletedByUser: z.string().uuid().optional(),
 });
 
-// Conversation schemas
-export const ConversationMetadataSchema = z.object({
-  id: z.string().uuid(),
-  created_at: z.string(),
-  created_by_user: z.string().uuid(),
-  updated_at: z.string().optional(),
-  updated_by_user: z.string().uuid().optional(),
-  deleted_at: z.string().optional(),
-  deleted_by_user: z.string().uuid().optional(),
-  user_id: z.string().uuid(),
-  name: z.string().min(1),
-  description: z.string().nullable(),
-  project_id: z.string().uuid(),
-});
-
-// Message schemas
+// Message schema
 export const MessageSchema = z.object({
   id: z.string().uuid(),
-  created_at: z.string(),
-  created_by_user: z.string().uuid(),
-  updated_at: z.string().optional(),
-  updated_by_user: z.string().uuid().optional(),
-  deleted_at: z.string().optional(),
-  deleted_by_user: z.string().uuid().optional(),
-  user_id: z.string().uuid(),
-  parent_id: z.string().uuid().optional(),
-  role: z.string().min(1), // Assuming RoleSchema is a string enum
+  role: z.string(), // Assuming this matches RoleSchema
   content: z.string().min(1),
-  conversation_id: z.string().uuid(),
+  conversationId: z.string().uuid(),
+  userId: z.string().uuid(),
+  parentId: z.string().uuid().optional(),
+  createdAt: z.string(),
+  createdByUser: z.string().uuid(),
+  updatedAt: z.string().optional(),
+  updatedByUser: z.string().uuid().optional(),
+  deletedAt: z.string().optional(),
+  deletedByUser: z.string().uuid().optional(),
 });
-
-// Activity schemas
-export const ActivitySchema = z.object({
+// Conversation schema
+export const ConversationSchema = z.object({
   id: z.string().uuid(),
-  created_at: z.string(),
-  created_by_user: z.string().uuid(),
-  updated_at: z.string().optional(),
-  updated_by_user: z.string().uuid().optional(),
-  deleted_at: z.string().optional(),
-  deleted_by_user: z.string().uuid().optional(),
   name: z.string().min(1),
   description: z.string().nullable(),
-  extension_id: z.string().uuid(),
+  projectId: z.string().uuid(),
+  userId: z.string().uuid(),
+  createdAt: z.string(),
+  createdByUser: z.string().uuid(),
+  updatedAt: z.string().optional(),
+  updatedByUser: z.string().uuid().optional(),
+  deletedAt: z.string().optional(),
+  deletedByUser: z.string().uuid().optional(),
+  messages: z.array(MessageSchema).optional(),
+});
+// Activity schema
+export const ActivitySchema = z.object({
+  id: z.string().uuid(),
+  name: z.string().min(1),
+  description: z.string().nullable(),
+  extensionId: z.string().uuid(),
+  createdAt: z.string(),
+  createdByUser: z.string().uuid(),
+  updatedAt: z.string().optional(),
+  updatedByUser: z.string().uuid().optional(),
+  deletedAt: z.string().optional(),
+  deletedByUser: z.string().uuid().optional(),
 });
 
-// MessageActivity schemas
+// MessageActivity schema
 export const MessageActivitySchema = z.object({
   id: z.string().uuid(),
-  created_at: z.string(),
-  created_by_user: z.string().uuid(),
-  updated_at: z.string().optional(),
-  updated_by_user: z.string().uuid().optional(),
-  deleted_at: z.string().optional(),
-  deleted_by_user: z.string().uuid().optional(),
-  parent_id: z.string().uuid().optional(),
   title: z.string().min(1),
   body: z.string().min(1),
-  message_id: z.string().uuid(),
-  chain_step_id: z.string().uuid(),
+  messageId: z.string().uuid(),
+  chainStepId: z.string().uuid(),
+  parentId: z.string().uuid().optional(),
+  createdAt: z.string(),
+  createdByUser: z.string().uuid(),
+  updatedAt: z.string().optional(),
+  updatedByUser: z.string().uuid().optional(),
+  deletedAt: z.string().optional(),
+  deletedByUser: z.string().uuid().optional(),
 });
 
-// Artifact schemas
+// Artifact schema
 export const ArtifactSchema = z.object({
   id: z.string().uuid(),
-  created_at: z.string(),
-  created_by_user: z.string().uuid(),
-  updated_at: z.string().optional(),
-  updated_by_user: z.string().uuid().optional(),
-  deleted_at: z.string().optional(),
-  deleted_by_user: z.string().uuid().optional(),
-  parent_id: z.string().uuid().optional(),
   name: z.string().min(1),
-  relative_path: z.string().min(1),
-  hosted_path: z.string().min(1),
+  relativePath: z.string().min(1),
+  hostedPath: z.string().min(1),
   encrypted: z.boolean().default(false),
-  project_id: z.string().uuid(),
-  source_message_id: z.string().uuid(),
+  projectId: z.string().uuid(),
+  sourceMessageId: z.string().uuid(),
+  parentId: z.string().uuid().optional(),
+  createdAt: z.string(),
+  createdByUser: z.string().uuid(),
+  updatedAt: z.string().optional(),
+  updatedByUser: z.string().uuid().optional(),
+  deletedAt: z.string().optional(),
+  deletedByUser: z.string().uuid().optional(),
 });
 
-// MessageArtifact schemas
+// MessageArtifact schema
 export const MessageArtifactSchema = z.object({
   id: z.string().uuid(),
-  created_at: z.string(),
-  created_by_user: z.string().uuid(),
-  updated_at: z.string().optional(),
-  updated_by_user: z.string().uuid().optional(),
-  deleted_at: z.string().optional(),
-  deleted_by_user: z.string().uuid().optional(),
-  message_id: z.string().uuid(),
-  artifact_id: z.string().uuid(),
+  messageId: z.string().uuid(),
+  artifactId: z.string().uuid(),
+  createdAt: z.string(),
+  createdByUser: z.string().uuid(),
+  updatedAt: z.string().optional(),
+  updatedByUser: z.string().uuid().optional(),
+  deletedAt: z.string().optional(),
+  deletedByUser: z.string().uuid().optional(),
 });
 
-// MessageFeedback schemas
+// MessageFeedback schema
 export const MessageFeedbackSchema = z.object({
   id: z.string().uuid(),
-  created_at: z.string(),
-  created_by_user: z.string().uuid(),
-  updated_at: z.string().optional(),
-  updated_by_user: z.string().uuid().optional(),
-  deleted_at: z.string().optional(),
-  deleted_by_user: z.string().uuid().optional(),
-  message_id: z.string().uuid(),
+  messageId: z.string().uuid(),
   content: z.string().min(1),
   positive: z.boolean().nullable(),
+  createdAt: z.string(),
+  createdByUser: z.string().uuid(),
+  updatedAt: z.string().optional(),
+  updatedByUser: z.string().uuid().optional(),
+  deletedAt: z.string().optional(),
+  deletedByUser: z.string().uuid().optional(),
 });
 
-// UserNotification schemas
+// UserNotification schema
 export const UserNotificationSchema = z.object({
   id: z.string().uuid(),
-  created_at: z.string(),
-  created_by_user: z.string().uuid(),
-  updated_at: z.string().optional(),
-  updated_by_user: z.string().uuid().optional(),
-  deleted_at: z.string().optional(),
-  deleted_by_user: z.string().uuid().optional(),
-  user_id: z.string().uuid(),
   type: z.string().min(1),
   content: z.string().min(1),
   read: z.boolean().default(false),
-  read_at: z.string().nullable(),
-  message_id: z.string().uuid().nullable(),
-  conversation_id: z.string().uuid().nullable(),
-});
-
-// Combined schemas for related models
-export const ConversationSchema = z.object({
-  metadata: ConversationMetadataSchema,
-  messages: z.array(MessageSchema),
-});
-
-export const ProjectWithContextPromptsSchema = z.object({
-  project: ProjectSchema,
-  contextPrompts: z.array(ProjectContextPromptSchema),
-});
-
-export const ConversationEdgeSchema = z.object({
-  id: z.string().uuid(),
-  name: z.string().min(1),
+  readAt: z.string().nullable(),
+  messageId: z.string().uuid().nullable(),
+  conversationId: z.string().uuid().nullable(),
+  userId: z.string().uuid(),
   createdAt: z.string(),
+  createdByUser: z.string().uuid(),
   updatedAt: z.string().optional(),
-  hasNotifications: z.boolean(),
-  attachmentCount: z.number().int().nonnegative(),
-  summary: z.unknown(),
+  updatedByUser: z.string().uuid().optional(),
+  deletedAt: z.string().optional(),
+  deletedByUser: z.string().uuid().optional(),
 });
 
 // Type exports
 export type Project = z.infer<typeof ProjectSchema>;
 export type ProjectContextPrompt = z.infer<typeof ProjectContextPromptSchema>;
 export type Conversation = z.infer<typeof ConversationSchema>;
-export type ConversationMetadata = z.infer<typeof ConversationMetadataSchema>;
 export type Message = z.infer<typeof MessageSchema>;
 export type Activity = z.infer<typeof ActivitySchema>;
 export type MessageActivity = z.infer<typeof MessageActivitySchema>;
@@ -183,4 +161,3 @@ export type Artifact = z.infer<typeof ArtifactSchema>;
 export type MessageArtifact = z.infer<typeof MessageArtifactSchema>;
 export type MessageFeedback = z.infer<typeof MessageFeedbackSchema>;
 export type UserNotification = z.infer<typeof UserNotificationSchema>;
-export type ConversationEdge = z.infer<typeof ConversationEdgeSchema>;

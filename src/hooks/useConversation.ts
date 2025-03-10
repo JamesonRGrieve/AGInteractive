@@ -20,15 +20,19 @@ export function useConversation(conversationId: string): SWRResponse<Conversatio
   const client = createGraphQLClient();
 
   return useSWR<Conversation | null>(
-    conversationId ? [`/conversation`, conversationId] : null,
+    [`/conversation`, conversationId],
     async (): Promise<Conversation | null> => {
+      console.log('useConversation() ID: ', conversationId);
       if (!conversationId || conversationId === '-') return null;
       try {
         const query = ConversationSchema.toGQL('query', 'conversation', { conversationId });
         log(['GQL useConversation() Query', query], {
           client: 3,
         });
-        const response = await client.request<{ conversation: Conversation }>(query, { conversationId });
+        log(['GQL useConversation() Conversation ID', conversationId], {
+          client: 3,
+        });
+        const response = await client.request<{ conversation: Conversation }>(query, { conversationId: conversationId });
         return response.conversation;
       } catch (error) {
         log(['GQL useConversation() Error', error], {

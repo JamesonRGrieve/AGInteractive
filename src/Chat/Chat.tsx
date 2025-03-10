@@ -12,14 +12,13 @@ import { getCookie } from 'cookies-next';
 import { Badge, Check, Download, Paperclip, Pencil, Plus, Trash2, Upload } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
-import useSWR, { mutate } from 'swr';
+import { mutate } from 'swr';
 import { UIProps } from '../AGInteractive';
 import { useConversation, useConversations } from '../hooks/useConversation';
 import ChatBar from './ChatInput';
 import ChatLog from './ChatLog';
 
-export async function getAndFormatConversastion(state): Promise<any[]> {
-  const { data: rawConversation } = useConversation(state.overrides.conversation);
+export function getAndFormatConversastion(rawConversation): any[] {
   log(['Raw conversation: ', rawConversation], { client: 3 });
   return rawConversation.reduce((accumulator, currentMessage: { id: string; message: string }) => {
     try {
@@ -66,19 +65,15 @@ export default function Chat({
   const [loading, setLoading] = useState(false);
   const state = useContext(InteractiveConfigContext);
   const { data: conversations, isLoading: isLoadingConversations } = useConversations();
-
-  // Find the current conversation
+  const { data: rawConversation } = useConversation(state.overrides.conversation);
+  const [conversation, setConversation] = useState([]);
+  useEffect(() => {
+    if (rawConversation) {
+      setConversation(getAndFormatConversastion(rawConversation));
+    }
+  }, [rawConversation]);
   const currentConversation = conversations?.find((conv) => conv.id === state.overrides.conversation);
-  const conversation = useSWR(
-    conversationSWRPath + state.overrides.conversation,
-    async () => {
-      return await getAndFormatConversastion(state);
-    },
-    {
-      fallbackData: [],
-      refreshInterval: loading ? 1000 : 0,
-    },
-  );
+
   const { data: activeTeam } = useTeam();
   console.log('CONVERSATION DATA: ', conversation);
   useEffect(() => {
@@ -326,7 +321,7 @@ export default function Chat({
         </SidebarGroup>
       </SidebarContent>
       <ChatLog
-        conversation={conversation.data}
+        conversation={conversation}
         alternateBackground={alternateBackground}
         setLoading={setLoading}
         loading={loading}
