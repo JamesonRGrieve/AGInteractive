@@ -220,7 +220,11 @@ export function useDynamicInput(initialValue = '', uploadedFiles: { [x: string]:
   };
 
   const handleBlur = () => {
-    setIsActive(false);
+    setValue('');
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'unset';
+    }
   };
 
   return { textareaRef, isActive, handleFocus, handleBlur, value, setValue };
