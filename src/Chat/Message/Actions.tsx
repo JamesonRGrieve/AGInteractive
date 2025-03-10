@@ -19,7 +19,7 @@ import JRGDialog from './Dialog';
 import { ChatItem } from './Message';
 
 export type MessageProps = {
-  chatItem: { role: string; message: string; timestamp: string; rlhf?: { positive: boolean; feedback: string } };
+  chatItem: { role: string; message: string; createdAt: string; rlhf?: { positive: boolean; feedback: string } };
   lastUserMessage: string;
   alternateBackground?: string;
   setLoading: (loading: boolean) => void;

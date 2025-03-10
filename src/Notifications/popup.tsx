@@ -1,9 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { PiBellSimpleRingingFill, PiBell } from 'react-icons/pi';
-import { SidebarMenuButton } from '@/components/ui/sidebar';
+import { dummyNotifications } from '@/app/notifications/page';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,8 +10,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { SidebarMenuButton } from '@/components/ui/sidebar';
 import { formatTimeAgo } from '@/lib/time-ago';
-import { dummyNotifications } from '@/app/notifications/page';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { PiBell, PiBellSimpleRingingFill } from 'react-icons/pi';
 
 export function NotificationsNavItem() {
   const router = useRouter();
@@ -60,7 +60,7 @@ export function NotificationsNavItem() {
             >
               <div className='font-medium'>{notification.conversationName}</div>
               <div className='text-sm text-muted-foreground'>{notification.message}</div>
-              <div className='text-xs text-muted-foreground'>{formatTimeAgo(notification.timestamp)}</div>
+              <div className='text-xs text-muted-foreground'>{formatTimeAgo(notification.createdAt)}</div>
             </DropdownMenuItem>
           ))}
         </DropdownMenuGroup>

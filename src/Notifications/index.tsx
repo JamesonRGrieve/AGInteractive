@@ -1,9 +1,9 @@
 'use client';
-import { useRouter } from 'next/navigation';
-import { Card, CardContent } from '@/components/ui/card';
-import { formatTimeAgo } from '@/lib/time-ago';
-import { TooltipBasic } from '@/components/ui/tooltip';
 import { dummyNotifications } from '@/app/notifications/page';
+import { Card, CardContent } from '@/components/ui/card';
+import { TooltipBasic } from '@/components/ui/tooltip';
+import { formatTimeAgo } from '@/lib/time-ago';
+import { useRouter } from 'next/navigation';
 
 export function Notifications({ notifications }: { notifications: typeof dummyNotifications }) {
   const router = useRouter();
@@ -20,13 +20,13 @@ export function Notifications({ notifications }: { notifications: typeof dummyNo
             <div className='space-y-2'>
               <div className='flex items-start justify-between'>
                 <h3 className='font-semibold'>{notification.conversationName}</h3>
-                <TooltipBasic title={formatDate(notification.timestamp)}>
+                <TooltipBasic title={formatDate(notification.createdAt)}>
                   <span className='text-sm cursor-default text-muted-foreground'>
-                    {formatTimeAgo(notification.timestamp)}
+                    {formatTimeAgo(notification.createdAt)}
                   </span>
                 </TooltipBasic>
               </div>
-              <p className='text-sm text-muted-foreground'>{notification.message}</p>
+              <p className='text-sm text-muted-foreground'>{notification.content}</p>
             </div>
           </CardContent>
         </Card>

@@ -1,17 +1,17 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import CodeBlock from './Markdown/CodeBlock';
 import MarkdownHeading from './Markdown/Heading';
-import MarkdownLink from './Markdown/Link';
 import MarkdownImage from './Markdown/Image';
+import MarkdownLink from './Markdown/Link';
 import textToMarkdown from './Markdown/Preprocessor';
 import { DataTable } from './data-table';
 import { createColumns } from './data-table/data-table-columns';
 
 export type MarkdownBlockProps = {
   content: string;
-  chatItem?: { role: string; timestamp: string; message: string };
+  chatItem?: { role: string; createdAt: string; content: string };
   setLoading?: (loading: boolean) => void;
 };
 export default function MarkdownBlock({ content, chatItem, setLoading }: MarkdownBlockProps): ReactNode {
@@ -28,10 +28,10 @@ export default function MarkdownBlock({ content, chatItem, setLoading }: Markdow
       : ''; // Remove any newlines or backslashes at the beginning of the message.
   };
 
-  const timestamp = chatItem
-    ? chatItem.timestamp.replace(/ /g, '-').replace(/:/g, '-').replace(/,/g, '')
+  const createdAt = chatItem
+    ? chatItem.createdAt.replace(/ /g, '-').replace(/:/g, '-').replace(/,/g, '')
     : new Date().toLocaleString().replace(/\D/g, '');
-  const fileName = chatItem ? `${chatItem.role}-${timestamp.split('.')[0]}` : `${timestamp.split('.')[0]}`;
+  const fileName = chatItem ? `${chatItem.role}-${createdAt.split('.')[0]}` : `${createdAt.split('.')[0]}`;
 
   function parseMarkdownTable(markdown: string) {
     const tableLines = markdown.split('\n').filter((line) => line.includes('|'));

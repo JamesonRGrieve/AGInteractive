@@ -20,10 +20,10 @@ import ChatLog from './ChatLog';
 
 export function getAndFormatConversastion(rawConversation): any[] {
   log(['Raw conversation: ', rawConversation], { client: 3 });
-  return rawConversation.reduce((accumulator, currentMessage: { id: string; message: string }) => {
+  return rawConversation.messages.reduce((accumulator, currentMessage: { id: string; content: string }) => {
     try {
       log(['Processing message: ', currentMessage], { client: 3 });
-      const messageType = currentMessage.message.split(' ')[0];
+      const messageType = currentMessage.content.split(' ')[0];
       if (messageType.startsWith('[SUBACTIVITY]')) {
         let target;
         const parent = messageType.split('[')[2].split(']')[0];
@@ -40,7 +40,7 @@ export function getAndFormatConversastion(rawConversation): any[] {
           target.children.push({ ...currentMessage, children: [] });
         } else {
           throw new Error(
-            `Parent message not found for subactivity ${currentMessage.id} - ${currentMessage.message}, parent ID: ${parent}`,
+            `Parent message not found for subactivity ${currentMessage.id} - ${currentMessage.content}, parent ID: ${parent}`,
           );
         }
       } else {
@@ -198,11 +198,11 @@ export default function Chat({
     const exportData = {
       name: currentConversation?.name || 'New',
       id: currentConversation?.id || '-',
-      created_at: currentConversation?.created_at || new Date().toISOString(),
+      createdAt: currentConversation?.createdAt || new Date().toISOString(),
       messages: conversationContent.map((msg) => ({
         role: msg.role,
         content: msg.message,
-        timestamp: msg.timestamp,
+        createdAt: msg.createdAt,
       })),
     };
 

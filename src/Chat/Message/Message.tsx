@@ -14,7 +14,7 @@ export type ChatItem = {
   id: string;
   role: string;
   message: string;
-  timestamp: string;
+  createdAt: string;
   rlhf?: {
     positive: boolean;
     feedback: string;
@@ -26,10 +26,10 @@ export type MessageProps = {
   setLoading: (loading: boolean) => void;
 };
 
-const checkUserMsgJustText = (chatItem: { role: string; message: string }) => {
+const checkUserMsgJustText = (chatItem: { role: string; content: string }) => {
   if (chatItem.role !== 'USER') return false;
 
-  const message = chatItem.message;
+  const message = chatItem.content;
   const hasMarkdownTable = /\n\|.*\|\n(\|-+\|.*\n)?/.test(message);
   return !(
     message.includes('```') ||
@@ -41,17 +41,17 @@ const checkUserMsgJustText = (chatItem: { role: string; message: string }) => {
 };
 
 export default function Message({ chatItem, lastUserMessage, setLoading }: MessageProps): React.JSX.Element {
-  const [updatedMessage, setUpdatedMessage] = useState(chatItem.message);
+  const [updatedMessage, setUpdatedMessage] = useState(chatItem.content);
   const { toast } = useToast();
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const formattedMessage = useMemo(() => {
-    let formatted = chatItem.message;
+    let formatted = chatItem.content;
     try {
-      const parsed = JSON.parse(chatItem.message);
-      formatted = (parsed.text || chatItem.message).replace('\\n', '\n');
+      const parsed = JSON.parse(chatItem.content);
+      formatted = (parsed.text || chatItem.content).replace('\\n', '\n');
     } catch (e) {
       // If parsing fails, use original message
     }
@@ -60,17 +60,17 @@ export default function Message({ chatItem, lastUserMessage, setLoading }: Messa
 
   const audios = useMemo(() => {
     if (
-      !chatItem?.message ||
-      typeof chatItem.message !== 'string' ||
-      !chatItem.message.includes('<audio controls><source src=')
+      !chatItem?.content ||
+      typeof chatItem.content !== 'string' ||
+      !chatItem.content.includes('<audio controls><source src=')
     ) {
       return null;
     }
 
-    const matches = [...chatItem.message.matchAll(/<audio controls><source src="([^"]+)" type="audio\/wav"><\/audio>/g)];
+    const matches = [...chatItem.content.matchAll(/<audio controls><source src="([^"]+)" type="audio\/wav"><\/audio>/g)];
     const audioSources = matches.map((match) => match[1]);
     return {
-      message: chatItem.message.replaceAll(/<audio controls><source src="[^"]+" type="audio\/wav"><\/audio>/g, ''),
+      message: chatItem.content.replaceAll(/<audio controls><source src="[^"]+" type="audio\/wav"><\/audio>/g, ''),
       sources: audioSources,
     };
   }, [chatItem]);
@@ -104,7 +104,7 @@ export default function Message({ chatItem, lastUserMessage, setLoading }: Messa
       )}
 
       <div className={cn('flex items-center flex-wrap', chatItem.role === 'USER' && 'flex-row-reverse')}>
-        <TimeStamp chatItem={chatItem} />
+        <createdAt chatItem={chatItem} />
 
         <MessageActions
           chatItem={chatItem}
@@ -119,13 +119,13 @@ export default function Message({ chatItem, lastUserMessage, setLoading }: Messa
   );
 }
 
-export function TimeStamp({ chatItem }: { chatItem: { role: string; timestamp: string } }) {
+export function createdAt({ chatItem }: { chatItem: { role: string; createdAt: string } }) {
   const [open, setOpen] = useState(false);
 
-  if (chatItem.timestamp === '') return null;
+  if (chatItem.createdAt === '') return null;
   const roleLabel = chatItem.role === 'USER' ? 'You' : chatItem.role;
-  const timeAgo = formatTimeAgo(chatItem.timestamp);
-  const date = formatDate(chatItem.timestamp, false);
+  const timeAgo = formatTimeAgo(chatItem.createdAt);
+  const date = formatDate(chatItem.createdAt, false);
 
   return (
     <p className='flex gap-1 text-sm text-muted-foreground whitespace-nowrap'>
@@ -137,7 +137,7 @@ export function TimeStamp({ chatItem }: { chatItem: { role: string; timestamp: s
               type='button'
               onClick={() => setOpen(true)}
               className='text-left cursor-pointer'
-              aria-label='Show full timestamp'
+              aria-label='Show full createdAt'
             >
               {timeAgo}
             </button>

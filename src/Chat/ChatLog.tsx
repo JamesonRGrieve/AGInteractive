@@ -11,7 +11,7 @@ export default function ChatLog({
   loading,
   setLoading,
 }: {
-  conversation: { role: string; message: string; timestamp: string; children: any[] }[];
+  conversation: { role: string; content: string; createdAt: string; children: any[] }[];
   setLoading: (loading: boolean) => void;
   loading: boolean;
   alternateBackground?: string;
@@ -31,7 +31,7 @@ export default function ChatLog({
         {conversation.length > 0 && conversation.map ? (
           conversation.map((chatItem, index: number) => {
             if (chatItem.role === 'USER') {
-              lastUserMessage = chatItem.message;
+              lastUserMessage = chatItem.content;
             }
             const validTypes = [
               '[ACTIVITY]',
@@ -46,14 +46,14 @@ export default function ChatLog({
               '[SUBACTIVITY][WARN]',
               '[SUBACTIVITY][INFO]',
             ];
-            const messageType = chatItem.message.split(' ')[0];
+            const messageType = chatItem.content.split(' ')[0];
             const messageBody = validTypes.some((x) => messageType.includes(x))
-              ? chatItem.message.substring(chatItem.message.indexOf(' '))
-              : chatItem.message;
-            // To-Do Fix this so the timestamp works. It's not granular enough rn and we get duplicates.
+              ? chatItem.content.substring(chatItem.content.indexOf(' '))
+              : chatItem.content;
+            // To-Do Fix this so the createdAt works. It's not granular enough rn and we get duplicates.
             return validTypes.includes(messageType) ? (
               <ChatActivity
-                key={chatItem.timestamp + '-' + messageBody}
+                key={chatItem.createdAt + '-' + messageBody}
                 activityType={
                   messageType === '[ACTIVITY]'
                     ? 'success'
@@ -67,15 +67,15 @@ export default function ChatLog({
                         | 'execution'
                         | 'diagram')
                 }
-                nextTimestamp={conversation[index + 1]?.timestamp}
+                nextcreatedAt={conversation[index + 1]?.createdAt}
                 message={messageBody}
-                timestamp={chatItem.timestamp}
+                createdAt={chatItem.createdAt}
                 alternateBackground={alternateBackground}
                 children={chatItem.children}
               />
             ) : (
               <Message
-                key={chatItem.timestamp + '-' + messageBody}
+                key={chatItem.createdAt + '-' + messageBody}
                 chatItem={chatItem}
                 lastUserMessage={lastUserMessage}
                 setLoading={setLoading}
