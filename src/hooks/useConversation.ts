@@ -33,6 +33,9 @@ export function useConversation(conversationId: string): SWRResponse<Conversatio
           client: 3,
         });
         const response = await client.request<{ conversation: Conversation }>(query, { conversationId: conversationId });
+        log(['GQL useConversation() Conversations', response], {
+          client: 3,
+        });
         return response.conversation;
       } catch (error) {
         log(['GQL useConversation() Error', error], {
@@ -64,6 +67,9 @@ export function useConversations(): SWRResponse<Conversation[]> {
           client: 3,
         });
         const response = await client.request<{ conversations: Conversation[] }>(query);
+        log(['GQL useConversation() Conversation ID', response.conversations], {
+          client: 3,
+        });
         return response.conversations;
       } catch (error) {
         log(['GQL useConversations() Error', error], {

@@ -64,7 +64,7 @@ export default function Chat({
 }: Overrides & UIProps): React.JSX.Element {
   const [loading, setLoading] = useState(false);
   const state = useContext(InteractiveConfigContext);
-  const { data: conversations, isLoading: isLoadingConversations } = useConversations();
+  const { data: conversations, isLoading: isLoadingConversations, mutate: mutateConversations } = useConversations();
   const { data: rawConversation } = useConversation(state.overrides.conversation);
   const [conversation, setConversation] = useState([]);
   useEffect(() => {
@@ -161,9 +161,9 @@ export default function Chat({
         //   // );
         //   await mutate('/conversation');
         //   log([response], { client: 1 });
-        // }
+        // }        mutate(conversationSWRPath + response);
         setLoading(false);
-        mutate(conversationSWRPath + response);
+        mutateConversations();
         mutate('/user');
 
         if (chatCompletion?.choices[0]?.message.content.length > 0) {
