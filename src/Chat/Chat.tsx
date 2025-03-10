@@ -70,6 +70,8 @@ export default function Chat({
   useEffect(() => {
     if (rawConversation) {
       setConversation(getAndFormatConversastion(rawConversation));
+    } else {
+      setConversation([]);
     }
   }, [rawConversation]);
   const currentConversation = conversations?.find((conv) => conv.id === state.overrides.conversation);
