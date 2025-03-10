@@ -2,7 +2,8 @@ import useSWR, { SWRResponse } from 'swr';
 
 // Import all types from the centralized schema file
 import log from '@/next-log/log';
-import { z } from 'zod';
+import '@/zod2gql/zod2gql';
+
 import { createGraphQLClient } from './lib';
 import { Conversation, ConversationSchema } from './z';
 
@@ -21,6 +22,7 @@ export function useConversation(conversationId: string): SWRResponse<Conversatio
   return useSWR<Conversation | null>(
     conversationId ? [`/conversation`, conversationId] : null,
     async (): Promise<Conversation | null> => {
+      if (!conversationId || conversationId === '-') return null;
       try {
         const query = ConversationSchema.toGQL('query', 'conversation', { conversationId });
         log(['GQL useConversation() Query', query], {
@@ -53,7 +55,7 @@ export function useConversations(): SWRResponse<Conversation[]> {
     '/conversations',
     async (): Promise<Conversation[]> => {
       try {
-        const query = z.array(ConversationSchema).toGQL('query', 'GetConversations');
+        const query = ConversationSchema.toGQL('query', 'GetConversations');
         log(['GQL useConversations() Query', query], {
           client: 3,
         });

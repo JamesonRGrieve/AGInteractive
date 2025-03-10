@@ -14,12 +14,12 @@ import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import useSWR, { mutate } from 'swr';
 import { UIProps } from '../AGInteractive';
-import { useConversations } from '../hooks/useConversation';
+import { useConversation, useConversations } from '../hooks/useConversation';
 import ChatBar from './ChatInput';
 import ChatLog from './ChatLog';
 
 export async function getAndFormatConversastion(state): Promise<any[]> {
-  const rawConversation = await state.sdk.getConversation('', state.overrides.conversation, 100, 1);
+  const { data: rawConversation } = useConversation(state.overrides.conversation);
   log(['Raw conversation: ', rawConversation], { client: 3 });
   return rawConversation.reduce((accumulator, currentMessage: { id: string; message: string }) => {
     try {
