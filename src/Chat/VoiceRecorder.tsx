@@ -10,16 +10,14 @@ export interface VoiceRecorderProps {
   disabled: boolean;
 }
 
-export const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSend, disabled }) => {
+export function VoiceRecorder({ onSend, disabled }: VoiceRecorderProps) {
   const [isRecording, setIsRecording] = useState(false);
-  const silenceTimer = useRef<NodeJS.Timeout | null>(null);
   const audioContext = useRef<AudioContext | null>(null);
   const analyser = useRef<AnalyserNode | null>(null);
-  const animationFrame = useRef<number>();
   const audioChunks = useRef<Float32Array[]>([]);
   const processorNode = useRef<ScriptProcessorNode | null>(null);
   const [ptt, setPtt] = useState(false);
-  // Move stopRecording above detectSilence
+
   const stopRecording = useCallback(() => {
     if (!audioContext.current || !processorNode.current) return;
 
@@ -48,49 +46,8 @@ export const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSend, disabled }
     analyser.current = null;
     processorNode.current = null;
 
-    if (animationFrame.current) {
-      cancelAnimationFrame(animationFrame.current);
-      animationFrame.current = undefined;
-    }
-
-    if (silenceTimer.current) {
-      clearTimeout(silenceTimer.current);
-      silenceTimer.current = null;
-    }
-
     setIsRecording(false);
   }, [onSend]);
-
-  const detectSilence = useCallback(
-    (dataArray: Uint8Array) => {
-      const sum = dataArray.reduce((a, b) => a + b, 0);
-      const average = sum / dataArray.length;
-
-      if (average < 5) {
-        if (silenceTimer.current === null) {
-          silenceTimer.current = setTimeout(() => {
-            stopRecording();
-          }, 1000);
-        }
-      } else {
-        if (silenceTimer.current) {
-          clearTimeout(silenceTimer.current);
-          silenceTimer.current = null;
-        }
-      }
-    },
-    [stopRecording],
-  );
-
-  const analyzeAudio = useCallback(() => {
-    if (!analyser.current) return;
-
-    const dataArray = new Uint8Array(analyser.current.frequencyBinCount);
-    analyser.current.getByteFrequencyData(dataArray);
-    detectSilence(dataArray);
-
-    animationFrame.current = requestAnimationFrame(analyzeAudio);
-  }, [detectSilence]);
 
   const startRecording = useCallback(async () => {
     try {
@@ -117,13 +74,10 @@ export const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSend, disabled }
       };
 
       setIsRecording(true);
-      if (!ptt) {
-        animationFrame.current = requestAnimationFrame(analyzeAudio);
-      }
     } catch (error) {
       console.error('Error starting recording:', error);
     }
-  }, [analyzeAudio, ptt]);
+  }, []);
 
   // Create WAV file from audio buffer
   const createWavBlob = (audioData: Float32Array, sampleRate: number): Blob => {
@@ -188,7 +142,6 @@ export const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSend, disabled }
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
-      // Check if both Left Ctrl and Backquote are currently pressed
       if (event.getModifierState('Control') && event.code === 'Backquote' && !isRecording && !event.repeat) {
         log(['Starting recording...'], { client: 1 });
         setPtt(true);
@@ -224,13 +177,6 @@ export const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSend, disabled }
       if (audioContext.current) {
         audioContext.current.close();
       }
-      if (animationFrame.current) {
-        cancelAnimationFrame(animationFrame.current);
-      }
-      if (silenceTimer.current) {
-        clearTimeout(silenceTimer.current);
-        silenceTimer.current = null;
-      }
     };
   }, []);
 
@@ -253,4 +199,4 @@ export const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onSend, disabled }
       <TooltipContent>{isRecording ? 'Stop recording' : 'Start recording'}</TooltipContent>
     </Tooltip>
   );
-};
+}
