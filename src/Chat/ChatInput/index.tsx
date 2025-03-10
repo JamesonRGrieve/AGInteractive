@@ -121,25 +121,18 @@ export default function ChatBar({
             />
           </div>
           <div className='flex items-center w-full gap-1'>
-            {enableFileUpload && !alternativeInputActive && (
+            {/* {enableFileUpload && !alternativeInputActive && (
               <UploadFiles
                 handleUploadFiles={handleUploadFiles}
                 message={message}
                 uploadedFiles={uploadedFiles}
-                disabled={disabled}
               />
-            )}
+            )} */}
             {Object.keys(uploadedFiles).length > 0 && (
               <ListUploadedFiles uploadedFiles={uploadedFiles} setUploadedFiles={setUploadedFiles} />
             )}
             <div className='grow' />
             {timer > -1 && <Timer loading={loading} timer={timer} />}
-            <TooltipBasic title='Collapse Input' side='top'>
-              <Button size='icon' variant='ghost' className='rounded-full' onClick={() => handleBlur()}>
-                <BiCollapseVertical className='w-4 h-4' />
-              </Button>
-            </TooltipBasic>
-            {showOverrideSwitchesCSV && <OverrideSwitches showOverrideSwitches={showOverrideSwitchesCSV} />}
             {enableVoiceInput && <VoiceRecorder onSend={onSend} disabled={disabled} />}
             {showResetConversation && <ResetConversation state={state} setCookie={setCookie} />}
             {!alternativeInputActive && (
