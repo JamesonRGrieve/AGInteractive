@@ -169,16 +169,16 @@ export default function Chat({
         if (chatCompletion?.choices[0]?.message.content.length > 0) {
           return chatCompletion.choices[0].message.content;
         } else {
-          throw 'Failed to get response from the agent';
+          throw '1 Failed to get response from the agent';
         }
       } else {
-        throw 'Failed to get response from the agent';
+        throw '2 Failed to get response from the agent';
       }
     } catch (error) {
       setLoading(false);
       toast({
         title: 'Error',
-        description: 'Failed to get response from the agent',
+        description: 'Error: ' + error,
         duration: 5000,
       });
     }
