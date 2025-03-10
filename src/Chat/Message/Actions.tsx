@@ -135,41 +135,6 @@ export function MessageActions({
               )}
             </>
           )}
-          <TooltipBasic title='Fork Conversation'>
-            <Button
-              variant='ghost'
-              size='icon'
-              onClick={async () => {
-                try {
-                  const response = await fetch(
-                    `${process.env.NEXT_PUBLIC_AGINFRASTRUCTURE_SERVER}/v1/conversation/fork/${state.overrides?.conversation}/${chatItem.id}`,
-                    {
-                      method: 'POST',
-                      headers: {
-                        Authorization: getCookie('jwt'),
-                      },
-                    },
-                  );
-
-                  if (!response.ok) throw new Error('Failed to fork conversation');
-
-                  const data = await response.json();
-                  toast({
-                    title: 'Conversation Forked',
-                    description: `New conversation created: ${data.message}`,
-                  });
-                } catch (error) {
-                  toast({
-                    title: 'Error',
-                    description: 'Failed to fork conversation',
-                    variant: 'destructive',
-                  });
-                }
-              }}
-            >
-              <LuGitFork />
-            </Button>
-          </TooltipBasic>
           <TooltipBasic title='Copy Message'>
             <Button
               variant='ghost'
