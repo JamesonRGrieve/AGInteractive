@@ -10,11 +10,20 @@ import { InteractiveConfigContext } from '@/interactive/InteractiveConfigContext
 import { cn } from '@/lib/utils';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import dayjs from 'dayjs';
+import isToday from 'dayjs/plugin/isToday';
+import isYesterday from 'dayjs/plugin/isYesterday';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import { usePathname, useRouter } from 'next/navigation';
 import { useContext } from 'react';
 import { useConversations } from '../hooks/useConversation';
 import { ConversationSchema } from '../hooks/z';
 import type { z } from 'zod';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isToday);
+dayjs.extend(isYesterday);
 
 type Conversation = z.infer<typeof ConversationSchema> & {
   hasNotifications?: boolean;
@@ -152,26 +161,15 @@ function ChatSearch({
 }
 
 function groupConversations(conversations: Conversation[]) {
-  const today = new Date();
-  const yesterday = new Date();
-  yesterday.setDate(today.getDate() - 1);
-
-  const isToday = (date: string) => new Date(date).toDateString() === today.toDateString();
-  const isYesterday = (date: string) => new Date(date).toDateString() === yesterday.toDateString();
-  const isPastWeek = (date: string) => {
-    const d = new Date(date);
-    const weekAgo = new Date();
-    weekAgo.setDate(today.getDate() - 7);
-    return d > weekAgo && d < yesterday;
-  };
-
   const groups = conversations.slice(0, 7).reduce<Record<string, Conversation[]>>(
     (groups, conversation) => {
-      if (isToday(conversation.updatedAt)) {
+      const date = dayjs(conversation.updatedAt);
+
+      if (date.isToday()) {
         groups['Today'].push(conversation);
-      } else if (isYesterday(conversation.updatedAt)) {
+      } else if (date.isYesterday()) {
         groups['Yesterday'].push(conversation);
-      } else if (isPastWeek(conversation.updatedAt)) {
+      } else if (date.isAfter(dayjs().subtract(7, 'day'))) {
         groups['Past Week'].push(conversation);
       } else {
         groups['Older'].push(conversation);
