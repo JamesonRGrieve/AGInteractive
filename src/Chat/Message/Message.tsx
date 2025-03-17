@@ -9,12 +9,6 @@ import { MessageActions } from './Actions';
 import AudioPlayer from './Audio';
 import MarkdownBlock from './MarkdownBlock';
 import formatDate from './formatDate';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 export type ChatItem = {
   id: string;
@@ -131,9 +125,8 @@ export function CreatedAt({ chatItem }: { chatItem: { role: string; createdAt: s
   if (chatItem.createdAt === '') return null;
   const roleLabel = chatItem.role === 'USER' ? 'You' : chatItem.role;
 
-  const localDate = dayjs.utc(chatItem.createdAt).local();
-  const timeAgo = formatTimeAgo(localDate.toISOString());
-  const date = formatDate(localDate.toISOString(), false);
+  const timeAgo = formatTimeAgo(chatItem.createdAt);
+  const date = formatDate(chatItem.createdAt, false);
 
   return (
     <p className='flex gap-1 text-sm text-muted-foreground whitespace-nowrap'>

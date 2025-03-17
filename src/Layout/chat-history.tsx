@@ -20,8 +20,6 @@ import { useConversations } from '../hooks/useConversation';
 import { ConversationSchema } from '../hooks/z';
 import type { z } from 'zod';
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);
 
