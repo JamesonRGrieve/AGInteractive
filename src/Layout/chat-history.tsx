@@ -12,11 +12,28 @@ import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import dayjs from 'dayjs';
 import { usePathname, useRouter } from 'next/navigation';
 import { useContext } from 'react';
-import { Conversation, useConversations } from '../hooks/useConversation';
+import { useConversations } from '../hooks/useConversation';
+import { ConversationSchema } from '../hooks/z';
+import type { z } from 'zod';
+
+type Conversation = z.infer<typeof ConversationSchema> & {
+  hasNotifications?: boolean;
+  attachmentCount?: number;
+};
+
+type InteractiveConfig = {
+  mutate?: (callback: (oldState: any) => any) => void;
+  overrides?: Record<string, any>;
+};
 
 export function ChatHistory() {
-  const state = useContext(InteractiveConfigContext);
-  const { data: conversationData, isLoading } = useConversations();
+  const state = useContext(InteractiveConfigContext) as InteractiveConfig;
+  const { data: conversationData, isLoading } = useConversations() as {
+    data: Conversation[] | undefined;
+    isLoading: boolean;
+  };
+
+  const allConversations = conversationData || [];
   const pathname = usePathname();
   const router = useRouter();
 
@@ -32,7 +49,7 @@ export function ChatHistory() {
   };
 
   if (!conversationData || !conversationData.length || isLoading) return null;
-  const groupedConversations = groupConversations(conversationData.filter((conversation) => conversation.name !== '-'));
+  const groupedConversations = groupConversations(allConversations.filter((conversation) => conversation.name !== '-'));
 
   return (
     <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
@@ -88,8 +105,8 @@ export function ChatHistory() {
       ))}
       <SidebarMenu>
         <SidebarMenuItem>
-          {conversationData && conversationData?.length > 10 && (
-            <ChatSearch {...{ conversationData, handleOpenConversation }}>
+          {allConversations && allConversations?.length > 10 && (
+            <ChatSearch {...{ conversationData: allConversations, handleOpenConversation }}>
               <SidebarMenuItem>
                 <SidebarMenuButton className='text-sidebar-foreground/70' side='left'>
                   <DotsHorizontalIcon className='text-sidebar-foreground/70' />
@@ -109,7 +126,7 @@ function ChatSearch({
   handleOpenConversation,
   children,
 }: {
-  conversationData: any[];
+  conversationData: Conversation[];
   handleOpenConversation: ({ conversationId }: { conversationId: string | number }) => void;
   children: React.ReactNode;
 }) {
@@ -148,8 +165,8 @@ function groupConversations(conversations: Conversation[]) {
     return d > weekAgo && d < yesterday;
   };
 
-  const groups = conversations.slice(0, 7).reduce(
-    (groups: { [key: string]: Conversation[] }, conversation: Conversation) => {
+  const groups = conversations.slice(0, 7).reduce<Record<string, Conversation[]>>(
+    (groups, conversation) => {
       if (isToday(conversation.updatedAt)) {
         groups['Today'].push(conversation);
       } else if (isYesterday(conversation.updatedAt)) {
