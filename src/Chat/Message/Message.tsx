@@ -104,7 +104,7 @@ export default function Message({ chatItem, lastUserMessage, setLoading }: Messa
       )}
 
       <div className={cn('flex items-center flex-wrap', chatItem.role === 'USER' && 'flex-row-reverse')}>
-        <createdAt chatItem={chatItem} />
+        <CreatedAt chatItem={chatItem} />
 
         <MessageActions
           chatItem={chatItem}
@@ -119,7 +119,7 @@ export default function Message({ chatItem, lastUserMessage, setLoading }: Messa
   );
 }
 
-export function createdAt({ chatItem }: { chatItem: { role: string; createdAt: string } }) {
+export function CreatedAt({ chatItem }: { chatItem: { role: string; createdAt: string } }) {
   const [open, setOpen] = useState(false);
 
   if (chatItem.createdAt === '') return null;
