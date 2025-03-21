@@ -32,6 +32,7 @@ export default function Chat({
   const { data: conversations, isLoading: isLoadingConversations, mutate: mutateConversations } = useConversations();
   const { data: rawConversation } = useConversation(state.overrides.conversation);
   const [conversation, setConversation] = useState([]);
+
   useEffect(() => {
     if (rawConversation) {
       setConversation(getAndFormatConversastion(rawConversation));
@@ -39,10 +40,11 @@ export default function Chat({
       setConversation([]);
     }
   }, [rawConversation]);
+
   const currentConversation = conversations?.find((conv) => conv.id === state.overrides.conversation);
 
   const { data: activeTeam } = useTeam();
-  console.log('CONVERSATION DATA: ', conversation);
+
   useEffect(() => {
     if (Array.isArray(state.overrides.conversation)) {
       state.mutate((oldState) => ({
@@ -51,6 +53,7 @@ export default function Chat({
       }));
     }
   }, [state.overrides.conversation]);
+
   async function chat(messageTextBody, messageAttachedFiles): Promise<string> {
     let conversationId;
     const messages = [];
@@ -112,11 +115,14 @@ export default function Chat({
       model: getCookie('aginteractive-agent'),
       user: conversationId,
     };
+
     setLoading(true);
+
     log(['Sending: ', state.openai, toOpenAI], { client: 1 });
     // const req = state.openai.chat.completions.create(toOpenAI);
     await new Promise((resolve) => setTimeout(resolve, 100));
     mutate(conversationSWRPath + conversationId);
+
     try {
       const completionResponse = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URI}/v1/chat/completions`,
