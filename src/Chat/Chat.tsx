@@ -18,42 +18,6 @@ import { useConversation, useConversations } from '../hooks/useConversation';
 import ChatBar from './ChatInput';
 import ChatLog from './ChatLog';
 
-export function getAndFormatConversastion(rawConversation): any[] {
-  log(['Raw conversation: ', rawConversation], { client: 3 });
-  return rawConversation.messages.reduce((accumulator, currentMessage: { id: string; content: string }) => {
-    try {
-      log(['Processing message: ', currentMessage], { client: 3 });
-      const messageType = currentMessage.content.split(' ')[0];
-      if (messageType.startsWith('[SUBACTIVITY]')) {
-        let target;
-        const parent = messageType.split('[')[2].split(']')[0];
-
-        const parentIndex = accumulator.findIndex((message) => {
-          return message.id === parent || message.children.some((child) => child.id === parent);
-        });
-        if (parentIndex !== -1) {
-          if (accumulator[parentIndex].id === parent) {
-            target = accumulator[parentIndex];
-          } else {
-            target = accumulator[parentIndex].children.find((child) => child.id === parent);
-          }
-          target.children.push({ ...currentMessage, children: [] });
-        } else {
-          throw new Error(
-            `Parent message not found for subactivity ${currentMessage.id} - ${currentMessage.content}, parent ID: ${parent}`,
-          );
-        }
-      } else {
-        accumulator.push({ ...currentMessage, children: [] });
-      }
-      return accumulator;
-    } catch (e) {
-      console.error(e);
-      return accumulator;
-    }
-  }, []);
-}
-
 const conversationSWRPath = '/conversation/';
 export default function Chat({
   showChatThemeToggles,
@@ -368,4 +332,40 @@ export default function Chat({
       />
     </>
   );
+}
+
+export function getAndFormatConversastion(rawConversation): any[] {
+  log(['Raw conversation: ', rawConversation], { client: 3 });
+  return rawConversation.messages.reduce((accumulator, currentMessage: { id: string; content: string }) => {
+    try {
+      log(['Processing message: ', currentMessage], { client: 3 });
+      const messageType = currentMessage.content.split(' ')[0];
+      if (messageType.startsWith('[SUBACTIVITY]')) {
+        let target;
+        const parent = messageType.split('[')[2].split(']')[0];
+
+        const parentIndex = accumulator.findIndex((message) => {
+          return message.id === parent || message.children.some((child) => child.id === parent);
+        });
+        if (parentIndex !== -1) {
+          if (accumulator[parentIndex].id === parent) {
+            target = accumulator[parentIndex];
+          } else {
+            target = accumulator[parentIndex].children.find((child) => child.id === parent);
+          }
+          target.children.push({ ...currentMessage, children: [] });
+        } else {
+          throw new Error(
+            `Parent message not found for subactivity ${currentMessage.id} - ${currentMessage.content}, parent ID: ${parent}`,
+          );
+        }
+      } else {
+        accumulator.push({ ...currentMessage, children: [] });
+      }
+      return accumulator;
+    } catch (e) {
+      console.error(e);
+      return accumulator;
+    }
+  }, []);
 }
