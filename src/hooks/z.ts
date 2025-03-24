@@ -9,9 +9,6 @@ export const ProjectSchema = z.object({
   createdAt: z.string(),
   createdByUser: z.string().uuid(),
   updatedAt: z.string().optional(),
-  updatedByUser: z.string().uuid().optional(),
-  deletedAt: z.string().optional(),
-  deletedByUser: z.string().uuid().optional(),
 });
 
 // ProjectContextPrompt schema
@@ -22,9 +19,6 @@ export const ProjectContextPromptSchema = z.object({
   createdAt: z.string(),
   createdByUser: z.string().uuid(),
   updatedAt: z.string().optional(),
-  updatedByUser: z.string().uuid().optional(),
-  deletedAt: z.string().optional(),
-  deletedByUser: z.string().uuid().optional(),
 });
 
 // Message schema
@@ -39,8 +33,6 @@ export const MessageSchema = z.object({
   createdByUser: z.string().uuid(),
   updatedAt: z.string().optional(),
   updatedByUser: z.string().uuid().optional(),
-  deletedAt: z.string().optional(),
-  deletedByUser: z.string().uuid().optional(),
 });
 // Conversation schema
 export const ConversationSchema = z.object({
@@ -64,8 +56,6 @@ export const ActivitySchema = z.object({
   createdByUser: z.string().uuid(),
   updatedAt: z.string().optional(),
   updatedByUser: z.string().uuid().optional(),
-  deletedAt: z.string().optional(),
-  deletedByUser: z.string().uuid().optional(),
 });
 
 // MessageActivity schema
@@ -80,8 +70,6 @@ export const MessageActivitySchema = z.object({
   createdByUser: z.string().uuid(),
   updatedAt: z.string().optional(),
   updatedByUser: z.string().uuid().optional(),
-  deletedAt: z.string().optional(),
-  deletedByUser: z.string().uuid().optional(),
 });
 
 // Artifact schema
@@ -97,9 +85,6 @@ export const ArtifactSchema = z.object({
   createdAt: z.string(),
   createdByUser: z.string().uuid(),
   updatedAt: z.string().optional(),
-  updatedByUser: z.string().uuid().optional(),
-  deletedAt: z.string().optional(),
-  deletedByUser: z.string().uuid().optional(),
 });
 
 // MessageArtifact schema
@@ -110,9 +95,6 @@ export const MessageArtifactSchema = z.object({
   createdAt: z.string(),
   createdByUser: z.string().uuid(),
   updatedAt: z.string().optional(),
-  updatedByUser: z.string().uuid().optional(),
-  deletedAt: z.string().optional(),
-  deletedByUser: z.string().uuid().optional(),
 });
 
 // MessageFeedback schema
@@ -124,9 +106,6 @@ export const MessageFeedbackSchema = z.object({
   createdAt: z.string(),
   createdByUser: z.string().uuid(),
   updatedAt: z.string().optional(),
-  updatedByUser: z.string().uuid().optional(),
-  deletedAt: z.string().optional(),
-  deletedByUser: z.string().uuid().optional(),
 });
 
 // UserNotification schema
@@ -142,9 +121,6 @@ export const UserNotificationSchema = z.object({
   createdAt: z.string(),
   createdByUser: z.string().uuid(),
   updatedAt: z.string().optional(),
-  updatedByUser: z.string().uuid().optional(),
-  deletedAt: z.string().optional(),
-  deletedByUser: z.string().uuid().optional(),
 });
 
 // Type exports
