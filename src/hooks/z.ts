@@ -52,9 +52,6 @@ export const ConversationSchema = z.object({
   createdAt: z.string(),
   createdByUser: z.string().uuid(),
   updatedAt: z.string().optional(),
-  updatedByUser: z.string().uuid().optional(),
-  deletedAt: z.string().optional(),
-  deletedByUser: z.string().uuid().optional(),
   messages: z.array(MessageSchema).optional(),
 });
 // Activity schema

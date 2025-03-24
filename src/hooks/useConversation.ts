@@ -85,12 +85,12 @@ export function useConversations(): SWRResponse<Conversation[]> {
 
         // Convert timestamps to local time for each conversation
         return response.conversations.map((conversation) => {
-          const localConversation = convertTimestampsToLocal(conversation, ['createdAt', 'updatedAt', 'deletedAt']);
+          const localConversation = convertTimestampsToLocal(conversation, ['createdAt', 'updatedAt']);
 
           // Convert message timestamps if they exist
           if (localConversation.messages) {
             localConversation.messages = localConversation.messages.map((message: Message) =>
-              convertTimestampsToLocal(message, ['createdAt', 'updatedAt', 'deletedAt']),
+              convertTimestampsToLocal(message, ['createdAt', 'updatedAt']),
             );
           }
 
