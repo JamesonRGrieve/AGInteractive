@@ -113,7 +113,7 @@ export default function Chat({
     const toOpenAI = {
       messages: messages,
       model: getCookie('aginteractive-agent'),
-      user: conversationId,
+      user: state.overrides.conversation || conversationId,
     };
 
     setLoading(true);
