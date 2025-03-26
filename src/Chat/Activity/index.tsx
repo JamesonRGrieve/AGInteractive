@@ -21,23 +21,26 @@ dayjs.extend(utc);
  * Calculate and format the time difference between two timestamps
  */
 export function getTimeDifference(createdAt1: string, createdAt2: string): string {
-  // Convert createdAts to Date objects
-  const date1 = new Date(createdAt1);
-  const date2 = new Date(createdAt2);
+  // Parse dates ensuring they're treated in UTC to avoid timezone issues
+  // This forces JavaScript to treat both dates in the same timezone context
+  const date1 = new Date(new Date(createdAt1).toISOString());
+  const date2 = new Date(new Date(createdAt2).toISOString());
 
   // Calculate the difference in milliseconds
-  const diffInMs = Math.abs(date1.getTime() - date2.getTime());
+  const diffInMs = Math.abs(date2.getTime() - date1.getTime());
 
   // Convert milliseconds to seconds
   const diffInSeconds = Math.floor(diffInMs / 1000);
-  if (diffInSeconds === 0) return '<1s';
+
+  if (diffInSeconds < 1) return '<1s';
 
   // Calculate minutes and seconds
   const minutes = Math.floor(diffInSeconds / 60);
   const seconds = diffInSeconds % 60;
+
+  // Format the output
   if (minutes === 0) return `${seconds}s`;
   if (seconds === 0) return `${minutes}m`;
-
   return `${minutes}m ${seconds}s`;
 }
 
@@ -64,7 +67,9 @@ const ActivityIcons: React.FC<ActivityIconsProps> = ({ state, type, createdAt, u
 
       {/* Time difference */}
       {state?.toLowerCase() !== 'info' && (
-        <div className='whitespace-nowrap'>{getTimeDifference(createdAt, updatedAt || currentTime)}</div>
+        <div className='whitespace-nowrap'>
+          {getTimeDifference(createdAt, createdAt === updatedAt ? new Date().toISOString().replace('Z', '') : updatedAt)}
+        </div>
       )}
 
       <div className='mx-1 w-1 h-4 border-l-2' />

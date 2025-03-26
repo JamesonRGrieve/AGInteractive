@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useConversation } from '../hooks/useConversation';
 import { ActivityBar as ChatActivity } from './Activity';
 import Message from './Message/Message';
@@ -13,12 +13,26 @@ export default function ChatLog({
   alternateBackground?: string;
 }): React.JSX.Element {
   const messagesEndRef = useRef(null);
-  const { data: conversation } = useConversation(conversationID);
+  const { data: conversation, mutate } = useConversation(conversationID);
   // useEffect(() => {
   //   log(['Conversation mutated, scrolling to bottom.', conversation], { client: 3 });
   //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   // }, [conversation]);
-
+  useEffect(() => {
+    if (
+      conversation.messages.length > 0 &&
+      [...conversation.messages].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0]
+        .role === 'USER'
+    ) {
+      setTimeout(() => {
+        mutate();
+      }, 1000);
+    } else {
+      setTimeout(() => {
+        mutate();
+      }, 5000);
+    }
+  }, [conversation]);
   return (
     <div className='flex flex-col-reverse flex-grow overflow-y-auto bg-background pb-28' style={{ flexBasis: '0px' }}>
       <div className='flex flex-col h-min max-w-100vw'>

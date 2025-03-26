@@ -61,7 +61,8 @@ export default function Chat({
           )
         ).data.conversation.id;
         mutateConversations();
-        router.push(`/chat/${conversationId}`);
+        // TODO Yes I know this is awful - deadlines.
+        location.href = `${process.env.APP_URI}/chat/${conversationId}`;
       }
 
       messages.push({
@@ -157,20 +158,6 @@ export default function Chat({
   useEffect(() => {
     mutate(conversationSWRPath + state.overrides.conversation);
   }, [state.overrides.conversation]);
-
-  useEffect(() => {
-    if (!loading) {
-      setTimeout(() => {
-        mutate(conversationSWRPath + state.overrides.conversation);
-      }, 1000);
-    }
-  }, [loading, state.overrides.conversation]);
-
-  useEffect(() => {
-    return () => {
-      setLoading(false);
-    };
-  }, []);
 
   return (
     <>
