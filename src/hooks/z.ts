@@ -1,4 +1,15 @@
 import { z } from 'zod';
+// Activity schema
+export const ActivityTypeSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string().min(1),
+  description: z.string().nullable(),
+  extensionId: z.string().uuid(),
+  // createdAt: z.string(),
+  // createdByUser: z.string().uuid(),
+  // updatedAt: z.string().optional(),
+  // updatedByUser: z.string().uuid().optional(),
+});
 
 // Project schema based directly on the database model
 export const ProjectSchema = z.object({
@@ -20,7 +31,21 @@ export const ProjectContextPromptSchema = z.object({
   createdByUser: z.string().uuid(),
   updatedAt: z.string().optional(),
 });
-
+// MessageActivity schema
+export const ActivitySchema = z.object({
+  id: z.string().uuid(),
+  title: z.string().min(1),
+  body: z.string().min(1),
+  state: z.string().optional(),
+  messageId: z.string().uuid(),
+  chainStepId: z.string().uuid(),
+  parentId: z.string().uuid().optional(),
+  createdAt: z.string(),
+  createdByUser: z.string().uuid(),
+  updatedAt: z.string().optional(),
+  updatedByUser: z.string().uuid().optional(),
+  type: ActivityTypeSchema.optional(),
+});
 // Message schema
 export const MessageSchema = z.object({
   id: z.string().uuid(),
@@ -33,6 +58,7 @@ export const MessageSchema = z.object({
   createdByUser: z.string().uuid(),
   updatedAt: z.string().optional(),
   updatedByUser: z.string().uuid().optional(),
+  activities: z.array(ActivitySchema).optional(),
 });
 // Conversation schema
 export const ConversationSchema = z.object({
@@ -45,31 +71,6 @@ export const ConversationSchema = z.object({
   createdByUser: z.string().uuid(),
   updatedAt: z.string().optional(),
   messages: z.array(MessageSchema).optional(),
-});
-// Activity schema
-export const ActivitySchema = z.object({
-  id: z.string().uuid(),
-  name: z.string().min(1),
-  description: z.string().nullable(),
-  extensionId: z.string().uuid(),
-  createdAt: z.string(),
-  createdByUser: z.string().uuid(),
-  updatedAt: z.string().optional(),
-  updatedByUser: z.string().uuid().optional(),
-});
-
-// MessageActivity schema
-export const MessageActivitySchema = z.object({
-  id: z.string().uuid(),
-  title: z.string().min(1),
-  body: z.string().min(1),
-  messageId: z.string().uuid(),
-  chainStepId: z.string().uuid(),
-  parentId: z.string().uuid().optional(),
-  createdAt: z.string(),
-  createdByUser: z.string().uuid(),
-  updatedAt: z.string().optional(),
-  updatedByUser: z.string().uuid().optional(),
 });
 
 // Artifact schema
@@ -128,8 +129,8 @@ export type Project = z.infer<typeof ProjectSchema>;
 export type ProjectContextPrompt = z.infer<typeof ProjectContextPromptSchema>;
 export type Conversation = z.infer<typeof ConversationSchema>;
 export type Message = z.infer<typeof MessageSchema>;
+export type ActivityType = z.infer<typeof ActivityTypeSchema>;
 export type Activity = z.infer<typeof ActivitySchema>;
-export type MessageActivity = z.infer<typeof MessageActivitySchema>;
 export type Artifact = z.infer<typeof ArtifactSchema>;
 export type MessageArtifact = z.infer<typeof MessageArtifactSchema>;
 export type MessageFeedback = z.infer<typeof MessageFeedbackSchema>;

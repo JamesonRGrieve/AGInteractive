@@ -1,8 +1,6 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipBasic, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/useToast';
@@ -10,13 +8,12 @@ import { InteractiveConfigContext } from '@/interactive/InteractiveConfigContext
 import { cn } from '@/lib/utils';
 import clipboardCopy from 'clipboard-copy';
 import { getCookie } from 'cookies-next';
-import { Loader2, Plus, Volume2, X } from 'lucide-react';
+import { Loader2, Volume2 } from 'lucide-react';
 import { useContext, useRef, useState } from 'react';
-import { LuCopy, LuDownload, LuPen as LuEdit, LuGitFork, LuThumbsDown, LuThumbsUp, LuTrash2 } from 'react-icons/lu';
+import { LuCopy, LuDownload, LuPen as LuEdit, LuTrash2 } from 'react-icons/lu';
 import { mutate } from 'swr';
 import { useConversations } from '../../hooks/useConversation';
 import JRGDialog from './Dialog';
-import { ChatItem } from './Message';
 
 export type MessageProps = {
   chatItem: { role: string; message: string; createdAt: string; rlhf?: { positive: boolean; feedback: string } };
@@ -26,17 +23,21 @@ export type MessageProps = {
 };
 
 export function MessageActions({
-  chatItem,
+  content,
+  role,
+  createdAt,
+  id,
   audios,
   formattedMessage,
-  lastUserMessage,
   updatedMessage,
   setUpdatedMessage,
 }: {
-  chatItem: ChatItem;
+  content: string;
+  id: string;
+  role: string;
+  createdAt: string;
   audios: { message: string; sources: string[] } | null;
   formattedMessage: string;
-  lastUserMessage: string;
   updatedMessage: string;
   setUpdatedMessage: (value: string) => void;
 }) {
@@ -44,7 +45,7 @@ export function MessageActions({
   const state = useContext(InteractiveConfigContext);
   const { data: convData } = useConversations();
   const { toast } = useToast();
-  const [vote, setVote] = useState(chatItem.rlhf ? (chatItem.rlhf.positive ? 1 : -1) : 0);
+  // const [vote, setVote] = useState(chatItem.rlhf ? (chatItem.rlhf.positive ? 1 : -1) : 0);
   const [open, setOpen] = useState(false);
   const [feedback, setFeedback] = useState('');
   const enableMessageEditing = process.env.NEXT_PUBLIC_AGINTERACTIVE_ALLOW_MESSAGE_EDITING === 'true';
@@ -59,7 +60,7 @@ export function MessageActions({
     setIsLoadingAudio(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_AGINFRASTRUCTURE_SERVER}/v1/conversation/${state.overrides.conversation}/tts/${chatItem.id}`,
+        `${process.env.NEXT_PUBLIC_AGINFRASTRUCTURE_SERVER}/v1/conversation/${state.overrides.conversation}/tts/${id}`,
         {
           method: 'GET',
           headers: {
@@ -89,10 +90,10 @@ export function MessageActions({
   };
 
   return (
-    <div className={cn('flex', chatItem.role === 'USER' && 'justify-end items-center')}>
+    <div className={cn('flex', role === 'USER' && 'justify-end items-center')}>
       {(audios?.message?.trim() || !audios) && (
         <>
-          {chatItem.role !== 'USER' && process.env.NEXT_PUBLIC_AGINTERACTIVE_RLHF === 'true' && (
+          {/* {chatItem.role !== 'USER' && process.env.NEXT_PUBLIC_AGINTERACTIVE_RLHF === 'true' && (
             <>
               <TooltipBasic title='Provide Positive Feedback'>
                 <Button
@@ -119,8 +120,8 @@ export function MessageActions({
                 </Button>
               </TooltipBasic>
             </>
-          )}
-          {chatItem.role !== 'USER' && !audios && (
+          )} */}
+          {role !== 'USER' && !audios && (
             <>
               {audioUrl ? (
                 <audio ref={audioRef} controls className='h-8 w-32'>
@@ -160,7 +161,7 @@ export function MessageActions({
                   type: 'text/plain;charset=utf-8',
                 });
                 element.href = URL.createObjectURL(file);
-                element.download = `${chatItem.role}-${chatItem.timestamp}.md`;
+                element.download = `${role}-${createdAt}.md`;
                 document.body.appendChild(element);
                 element.click();
               }}
@@ -187,7 +188,7 @@ export function MessageActions({
                   onConfirm={async () => {
                     await state.sdk.updateConversationMessage(
                       convData?.find((item) => item.id === state.overrides.conversation).name,
-                      chatItem.id,
+                      id,
                       updatedMessage,
                     );
                     mutate('/conversation/' + state.overrides.conversation);
@@ -218,7 +219,7 @@ export function MessageActions({
                     onConfirm={async () => {
                       await state.sdk.deleteConversationMessage(
                         convData?.find((item) => item.id === state.overrides.conversation).name,
-                        chatItem.id,
+                        id,
                       );
                       mutate('/conversation/' + state.overrides.conversation);
                     }}
@@ -229,13 +230,13 @@ export function MessageActions({
               </Tooltip>
             </TooltipProvider>
           )}
-          {chatItem.rlhf && (
+          {/* {chatItem.rlhf && (
             <p className={cn('text-sm', chatItem.rlhf.positive ? 'text-green-500' : 'text-red-500')}>
               {chatItem.rlhf.feedback}
             </p>
-          )}
+          )} */}
 
-          <Dialog open={open} onOpenChange={setOpen}>
+          {/* <Dialog open={open} onOpenChange={setOpen}>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Provide Feedback</DialogTitle>
@@ -317,7 +318,7 @@ export function MessageActions({
                 </Button>
               </DialogFooter>
             </DialogContent>
-          </Dialog>
+          </Dialog> */}
         </>
       )}
     </div>

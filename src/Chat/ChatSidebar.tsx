@@ -1,28 +1,20 @@
 'use client';
 
 import { SidebarContent } from '@/appwrapper/SidebarContentManager';
-import { useTeam } from '@/auth/hooks/useTeam';
 import { Input } from '@/components/ui/input';
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { toast } from '@/hooks/useToast';
-import { InteractiveConfigContext, Overrides } from '@/interactive/InteractiveConfigContext';
-import log from '@/next-log/log';
-import axios from 'axios';
-import { getCookie } from 'cookies-next';
+import { InteractiveConfigContext } from '@/interactive/InteractiveConfigContext';
 import { Badge, Check, Download, Paperclip, Pencil, Plus, Trash2, Upload } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { mutate } from 'swr';
-import { UIProps } from '../AGInteractive';
-import { useConversation, useConversations } from '../hooks/useConversation';
-import ChatBar from './ChatInput';
-import ChatLog from './ChatLog';
+import { useConversation } from '../hooks/useConversation';
 
 const conversationSWRPath = '/conversation/';
-export function ChatSidebar({ currentConversation }: { currentConversation: any }): React.JSX.Element {
+export function ChatSidebar({ conversationID }: { conversationID: string }): React.JSX.Element {
   const [loading, setLoading] = useState(false);
   const state = useContext(InteractiveConfigContext);
-
+  const { data: currentConversation } = useConversation(conversationID);
   const handleDeleteConversation = async (): Promise<void> => {
     await state.sdk.deleteConversation(currentConversation?.id || '-');
     await mutate();

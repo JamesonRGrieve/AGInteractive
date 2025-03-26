@@ -5,6 +5,7 @@ import { useToast } from '@/hooks/useToast';
 import { formatTimeAgo } from '@/lib/time-ago';
 import { cn } from '@/lib/utils';
 import React, { useMemo, useRef, useState } from 'react';
+import { Message } from '../../hooks/z';
 import { MessageActions } from './Actions';
 import AudioPlayer from './Audio';
 import MarkdownBlock from './MarkdownBlock';
@@ -26,10 +27,8 @@ export type MessageProps = {
   setLoading: (loading: boolean) => void;
 };
 
-const checkUserMsgJustText = (chatItem: { role: string; content: string }) => {
-  if (chatItem.role !== 'USER') return false;
-
-  const message = chatItem.content;
+const checkUserMsgJustText = (content: string) => {
+  const message = content;
   const hasMarkdownTable = /\n\|.*\|\n(\|-+\|.*\n)?/.test(message);
   return !(
     message.includes('```') ||
@@ -40,53 +39,43 @@ const checkUserMsgJustText = (chatItem: { role: string; content: string }) => {
   );
 };
 
-export default function Message({ chatItem, lastUserMessage, setLoading }: MessageProps): React.JSX.Element {
-  const [updatedMessage, setUpdatedMessage] = useState(chatItem.content);
+export default function Message({ content, role, createdAt, id }: Message): React.JSX.Element {
+  const [updatedMessage, setUpdatedMessage] = useState(content);
   const { toast } = useToast();
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const formattedMessage = useMemo(() => {
-    let formatted = chatItem.content;
+    let formatted = content;
     try {
-      const parsed = JSON.parse(chatItem.content);
-      formatted = (parsed.text || chatItem.content).replace('\\n', '\n');
+      const parsed = JSON.parse(content);
+      formatted = (parsed.text || content).replace('\\n', '\n');
     } catch (e) {
       // If parsing fails, use original message
     }
     return formatted;
-  }, [chatItem]);
+  }, [content]);
 
   const audios = useMemo(() => {
-    if (
-      !chatItem?.content ||
-      typeof chatItem.content !== 'string' ||
-      !chatItem.content.includes('<audio controls><source src=')
-    ) {
+    if (!content || typeof content !== 'string' || !content.includes('<audio controls><source src=')) {
       return null;
     }
 
-    const matches = [...chatItem.content.matchAll(/<audio controls><source src="([^"]+)" type="audio\/wav"><\/audio>/g)];
+    const matches = [...content.matchAll(/<audio controls><source src="([^"]+)" type="audio\/wav"><\/audio>/g)];
     const audioSources = matches.map((match) => match[1]);
     return {
-      message: chatItem.content.replaceAll(/<audio controls><source src="[^"]+" type="audio\/wav"><\/audio>/g, ''),
+      message: content.replaceAll(/<audio controls><source src="[^"]+" type="audio\/wav"><\/audio>/g, ''),
       sources: audioSources,
     };
-  }, [chatItem]);
-  const isUserMsgJustText = checkUserMsgJustText(chatItem);
+  }, [content]);
+  const isUserMsgJustText = role === 'USER' && checkUserMsgJustText(content);
 
   return (
     <div className={cn('m-3 overflow-hidden flex flex-col gap-2 min-w-48', isUserMsgJustText && 'max-w-[60%] self-end')}>
       {audios && audios.sources.length > 0 ? (
         <>
-          {audios.message?.trim() && (
-            <MarkdownBlock
-              content={audios.message}
-              chatItem={{ ...chatItem, message: audios.message }}
-              setLoading={setLoading}
-            />
-          )}
+          {audios.message?.trim() && <MarkdownBlock content={audios.message} createdAt={createdAt} role={role} />}
           {audios.sources.map((src) => (
             <AudioPlayer key={src} src={src} />
           ))}
@@ -94,23 +83,25 @@ export default function Message({ chatItem, lastUserMessage, setLoading }: Messa
       ) : (
         <div
           className={
-            chatItem.role === 'USER'
+            role === 'USER'
               ? 'chat-log-message-user bg-primary rounded-3xl py-1 rounded-br-none px-5 text-primary-foreground'
               : 'chat-log-message-ai p-0 pt-2 text-foreground'
           }
         >
-          <MarkdownBlock content={formattedMessage} chatItem={chatItem} setLoading={setLoading} />
+          <MarkdownBlock content={formattedMessage} createdAt={createdAt} role={role} />
         </div>
       )}
 
-      <div className={cn('flex items-center flex-wrap', chatItem.role === 'USER' && 'flex-row-reverse')}>
-        <CreatedAt chatItem={chatItem} />
+      <div className={cn('flex items-center flex-wrap', role === 'USER' && 'flex-row-reverse')}>
+        <CreatedAt createdAt={createdAt} role={role} />
 
         <MessageActions
-          chatItem={chatItem}
+          createdAt={createdAt}
+          role={role}
+          id={id}
+          content={content}
           audios={audios}
           formattedMessage={formattedMessage}
-          lastUserMessage={lastUserMessage}
           updatedMessage={updatedMessage}
           setUpdatedMessage={setUpdatedMessage}
         />
@@ -119,14 +110,14 @@ export default function Message({ chatItem, lastUserMessage, setLoading }: Messa
   );
 }
 
-export function CreatedAt({ chatItem }: { chatItem: { role: string; createdAt: string } }) {
+export function CreatedAt({ role, createdAt }: { role: string; createdAt: string }) {
   const [open, setOpen] = useState(false);
 
-  if (chatItem.createdAt === '') return null;
-  const roleLabel = chatItem.role === 'USER' ? 'You' : chatItem.role;
+  if (createdAt === '') return null;
+  const roleLabel = role === 'USER' ? 'You' : role;
 
-  const timeAgo = formatTimeAgo(chatItem.createdAt);
-  const date = formatDate(chatItem.createdAt, false);
+  const timeAgo = formatTimeAgo(createdAt);
+  const date = formatDate(createdAt, false);
 
   return (
     <p className='flex gap-1 text-sm text-muted-foreground whitespace-nowrap'>

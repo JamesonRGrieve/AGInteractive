@@ -1,6 +1,7 @@
-import { ReactNode } from 'react';
+import { ReactNode, useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { Message } from '../../hooks/z';
 import CodeBlock from './Markdown/CodeBlock';
 import MarkdownHeading from './Markdown/Heading';
 import MarkdownImage from './Markdown/Image';
@@ -9,13 +10,8 @@ import textToMarkdown from './Markdown/Preprocessor';
 import { DataTable } from './data-table';
 import { createColumns } from './data-table/data-table-columns';
 
-export type MarkdownBlockProps = {
-  content: string;
-  chatItem?: { role: string; createdAt: string; content: string };
-  setLoading?: (loading: boolean) => void;
-};
-export default function MarkdownBlock({ content, chatItem, setLoading }: MarkdownBlockProps): ReactNode {
-  const renderMessage = (message): string => {
+export default function MarkdownBlock({ content, role, createdAt }: Message): ReactNode {
+  const renderMessage = (message: string): string => {
     return message
       ? message
           .replace(/\n/g, ' \n') // Add a space before each newline character
@@ -28,10 +24,11 @@ export default function MarkdownBlock({ content, chatItem, setLoading }: Markdow
       : ''; // Remove any newlines or backslashes at the beginning of the message.
   };
 
-  const createdAt = chatItem
-    ? chatItem.createdAt.replace(/ /g, '-').replace(/:/g, '-').replace(/,/g, '')
-    : new Date().toLocaleString().replace(/\D/g, '');
-  const fileName = chatItem ? `${chatItem.role}-${createdAt.split('.')[0]}` : `${createdAt.split('.')[0]}`;
+  const fileName = useMemo(
+    () =>
+      `${role}-${(createdAt || Date.now().toString()).replace(/ /g, '-').replace(/:/g, '-').replace(/,/g, '').split('.')[0]}`,
+    [role, createdAt],
+  );
 
   function parseMarkdownTable(markdown: string) {
     const tableLines = markdown.split('\n').filter((line) => line.includes('|'));

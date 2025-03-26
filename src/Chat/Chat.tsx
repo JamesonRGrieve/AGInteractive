@@ -1,20 +1,16 @@
 'use client';
 
-import { SidebarContent } from '@/appwrapper/SidebarContentManager';
 import { useTeam } from '@/auth/hooks/useTeam';
-import { Input } from '@/components/ui/input';
-import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { toast } from '@/hooks/useToast';
 import { InteractiveConfigContext, Overrides } from '@/interactive/InteractiveConfigContext';
 import log from '@/next-log/log';
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
-import { Badge, Check, Download, Paperclip, Pencil, Plus, Trash2, Upload } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { mutate } from 'swr';
 import { UIProps } from '../AGInteractive';
-import { useConversation, useConversations } from '../hooks/useConversation';
+import { useConversations } from '../hooks/useConversation';
 import ChatBar from './ChatInput';
 import ChatLog from './ChatLog';
 import { ChatSidebar } from './ChatSidebar';
@@ -29,22 +25,9 @@ export default function Chat({
 }: Overrides & UIProps): React.JSX.Element {
   const [loading, setLoading] = useState(false);
   const state = useContext(InteractiveConfigContext);
-  const { data: conversations, isLoading: isLoadingConversations, mutate: mutateConversations } = useConversations();
-  const { data: rawConversation } = useConversation(state.overrides.conversation);
-  const [conversation, setConversation] = useState([]);
-
-  useEffect(() => {
-    if (rawConversation) {
-      setConversation(getAndFormatConversastion(rawConversation));
-    } else {
-      setConversation([]);
-    }
-  }, [rawConversation]);
-
-  const currentConversation = conversations?.find((conv) => conv.id === state.overrides.conversation);
+  const { mutate: mutateConversations } = useConversations();
 
   const { data: activeTeam } = useTeam();
-
   useEffect(() => {
     if (Array.isArray(state.overrides.conversation)) {
       state.mutate((oldState) => ({
@@ -53,7 +36,6 @@ export default function Chat({
       }));
     }
   }, [state.overrides.conversation]);
-
   async function chat(messageTextBody, messageAttachedFiles): Promise<string> {
     let conversationId;
     const messages = [];
@@ -201,13 +183,8 @@ export default function Chat({
 
   return (
     <>
-      <ChatSidebar currentConversation={currentConversation} />
-      <ChatLog
-        conversation={conversation}
-        alternateBackground={alternateBackground}
-        setLoading={setLoading}
-        loading={loading}
-      />
+      <ChatSidebar conversationID={state.overrides.conversation} />
+      <ChatLog conversationID={state.overrides.conversation} alternateBackground={alternateBackground} />
       <ChatBar
         onSend={chat}
         disabled={loading}

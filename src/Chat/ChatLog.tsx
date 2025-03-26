@@ -2,84 +2,45 @@
 
 import log from '@/next-log/log';
 import React, { useEffect, useRef } from 'react';
-import { Activity as ChatActivity } from './Activity';
+import { useConversation } from '../hooks/useConversation';
+import { ActivityBar as ChatActivity } from './Activity';
 import Message from './Message/Message';
 
 export default function ChatLog({
-  conversation,
+  conversationID,
   alternateBackground,
-  loading,
-  setLoading,
 }: {
-  conversation: { role: string; content: string; createdAt: string; children: any[] }[];
-  setLoading: (loading: boolean) => void;
-  loading: boolean;
+  conversationID: string;
   alternateBackground?: string;
 }): React.JSX.Element {
-  let lastUserMessage = ''; // track the last user message
   const messagesEndRef = useRef(null);
-
+  const { data: conversation } = useConversation(conversationID);
+  console.log('SELECTED CONVERSATION', conversation);
   useEffect(() => {
     log(['Conversation mutated, scrolling to bottom.', conversation], { client: 3 });
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [conversation]);
-  console.log('CONVERSATION VALID', conversation.length > 0 && conversation.map, conversation);
 
   return (
     <div className='flex flex-col-reverse flex-grow overflow-y-auto bg-background pb-28' style={{ flexBasis: '0px' }}>
       <div className='flex flex-col h-min max-w-100vw'>
-        {conversation.length > 0 && conversation.map ? (
-          conversation.map((chatItem, index: number) => {
-            if (chatItem.role === 'USER') {
-              lastUserMessage = chatItem.content;
-            }
-            const validTypes = [
-              '[ACTIVITY]',
-              '[ACTIVITY][ERROR]',
-              '[ACTIVITY][WARN]',
-              '[ACTIVITY][INFO]',
-              '[SUBACTIVITY]',
-              '[SUBACTIVITY][THOUGHT]',
-              '[SUBACTIVITY][REFLECTION]',
-              '[SUBACTIVITY][EXECUTION]',
-              '[SUBACTIVITY][ERROR]',
-              '[SUBACTIVITY][WARN]',
-              '[SUBACTIVITY][INFO]',
-            ];
-            const messageType = chatItem.content.split(' ')[0];
-            const messageBody = validTypes.some((x) => messageType.includes(x))
-              ? chatItem.content.substring(chatItem.content.indexOf(' '))
-              : chatItem.content;
-            // To-Do Fix this so the createdAt works. It's not granular enough rn and we get duplicates.
-            return validTypes.includes(messageType) ? (
-              <ChatActivity
-                key={chatItem.createdAt + '-' + messageBody}
-                activityType={
-                  messageType === '[ACTIVITY]'
-                    ? 'success'
-                    : (messageType.split('[')[2].split(']')[0].toLowerCase() as
-                        | 'error'
-                        | 'info'
-                        | 'success'
-                        | 'warn'
-                        | 'thought'
-                        | 'reflection'
-                        | 'execution'
-                        | 'diagram')
-                }
-                nextcreatedAt={conversation[index + 1]?.createdAt}
-                message={messageBody}
-                createdAt={chatItem.createdAt}
-                alternateBackground={alternateBackground}
-                children={chatItem.children}
-              />
-            ) : (
-              <Message
-                key={chatItem.createdAt + '-' + messageBody}
-                chatItem={chatItem}
-                lastUserMessage={lastUserMessage}
-                setLoading={setLoading}
-              />
+        {conversation.messages.length > 0 ? (
+          conversation.messages.map((message, index: number) => {
+            return (
+              <>
+                <Message {...message} />
+                {message.activities
+                  .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+                  .filter((x) => x.parentId == null)
+                  .map((activity) => (
+                    <ChatActivity
+                      key={activity.id}
+                      {...activity}
+                      alternateBackground={alternateBackground}
+                      children={message.activities.filter((x) => x.parentId == activity.id)}
+                    />
+                  ))}
+              </>
             );
           })
         ) : (

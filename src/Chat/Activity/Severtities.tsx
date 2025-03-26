@@ -1,8 +1,8 @@
-import { LuInfo as Info, LuPencil as Pencil } from 'react-icons/lu';
+import { CircleCheck, Ban as Error, TriangleAlert } from 'lucide-react';
 import { FaRunning } from 'react-icons/fa';
-import { Ban as Error, CircleCheck, TriangleAlert } from 'lucide-react';
-import { TfiThought } from 'react-icons/tfi';
 import { GiMirrorMirror } from 'react-icons/gi';
+import { LuInfo as Info, LuPencil as Pencil } from 'react-icons/lu';
+import { TfiThought } from 'react-icons/tfi';
 
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -44,7 +44,7 @@ export const severities = {
     text: 'text-success',
     border: 'border-success',
   },
-  warn: {
+  warning: {
     icon: (
       <Tooltip>
         <TooltipTrigger>

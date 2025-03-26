@@ -4,9 +4,9 @@ import useSWR, { SWRResponse } from 'swr';
 import log from '@/next-log/log';
 import '@/zod2gql/zod2gql';
 
+import { convertTimestampsToLocal } from '../lib/timezone';
 import { createGraphQLClient } from './lib';
 import { Conversation, ConversationSchema, Message } from './z';
-import { convertTimestampsToLocal } from '../lib/timezone';
 
 // ============================================================================
 // Conversation Related Hooks
@@ -14,26 +14,26 @@ import { convertTimestampsToLocal } from '../lib/timezone';
 
 /**
  * Hook to fetch and manage conversation data with real-time updates
- * @param conversationId - Conversation ID to fetch
+ * @param id - Conversation ID to fetch
  * @returns SWR response containing conversation data
  */
-export function useConversation(conversationId: string): SWRResponse<Conversation | null> {
+export function useConversation(id: string): SWRResponse<Conversation | null> {
   const client = createGraphQLClient();
 
   return useSWR<Conversation | null>(
-    [`/conversation`, conversationId],
+    [`/conversation`, id],
     async (): Promise<Conversation | null> => {
-      console.log('useConversation() ID: ', conversationId);
-      if (!conversationId || conversationId === '-') return null;
+      console.log('useConversation() ID: ', id);
+      if (!id || id === '-') return null;
       try {
-        const query = ConversationSchema.toGQL('query', 'conversation', { conversationId });
+        const query = ConversationSchema.toGQL('query', 'conversation', { id });
         log(['GQL useConversation() Query', query], {
           client: 3,
         });
-        log(['GQL useConversation() Conversation ID', conversationId], {
+        log(['GQL useConversation() Conversation ID', id], {
           client: 3,
         });
-        const response = await client.request<{ conversation: Conversation }>(query, { conversationId: conversationId });
+        const response = await client.request<{ conversation: Conversation }>(query, { id: id });
         log(['GQL useConversation() Conversations', response], {
           client: 3,
         });
@@ -57,7 +57,9 @@ export function useConversation(conversationId: string): SWRResponse<Conversatio
       }
     },
     {
-      fallbackData: null,
+      fallbackData: {
+        messages: [],
+      },
       refreshInterval: 1000, // Real-time updates
     },
   );
