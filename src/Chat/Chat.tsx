@@ -1,7 +1,6 @@
 'use client';
 
 import { useTeam } from '@/auth/hooks/useTeam';
-import { toast } from '@/hooks/useToast';
 import { InteractiveConfigContext, Overrides } from '@/interactive/InteractiveConfigContext';
 import log from '@/next-log/log';
 import axios from 'axios';
@@ -61,8 +60,6 @@ export default function Chat({
           )
         ).data.conversation.id;
         mutateConversations();
-        // TODO Yes I know this is awful - deadlines.
-        location.href = `${process.env.APP_URI}/chat/${conversationId}`;
       }
 
       messages.push({
@@ -97,7 +94,7 @@ export default function Chat({
       await new Promise((resolve) => setTimeout(resolve, 100));
       mutate(conversationSWRPath + conversationId);
 
-      const completionResponse = await axios.post(
+      const completionResponse = axios.post(
         `${process.env.NEXT_PUBLIC_API_URI}/v1/chat/completions`,
         {
           ...toOpenAI,
@@ -108,6 +105,11 @@ export default function Chat({
           },
         },
       );
+
+      setTimeout(() => {
+        // TODO Yes I know this is awful - deadlines.
+        location.href = `${process.env.APP_URI}/chat/${conversationId}`;
+      }, 1000);
       if (completionResponse.status === 200) {
         const chatCompletion = completionResponse.data;
         log(['RESPONSE: ', chatCompletion], { client: 1 });
@@ -144,11 +146,11 @@ export default function Chat({
       }
     } catch (error) {
       setLoading(false);
-      toast({
-        title: 'Error',
-        description: 'Error: ' + error,
-        duration: 5000,
-      });
+      // toast({
+      //   title: 'Error',
+      //   description: 'Error: ' + error,
+      //   duration: 5000,
+      // });
       console.error(error);
     }
   }
