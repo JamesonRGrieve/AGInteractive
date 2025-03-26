@@ -14,7 +14,6 @@ export default function ChatLog({
 }): React.JSX.Element {
   const messagesEndRef = useRef(null);
   const { data: conversation } = useConversation(conversationID);
-  console.log('SELECTED CONVERSATION', conversation);
   // useEffect(() => {
   //   log(['Conversation mutated, scrolling to bottom.', conversation], { client: 3 });
   //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

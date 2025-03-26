@@ -23,7 +23,6 @@ export function useConversation(id: string): SWRResponse<Conversation | null> {
   return useSWR<Conversation | null>(
     [`/conversation`, id],
     async (): Promise<Conversation | null> => {
-      console.log('useConversation() ID: ', id);
       if (!id || id === '-')
         return {
           messages: [],

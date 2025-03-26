@@ -139,7 +139,6 @@ export function ChatSidebar({ conversationID }: { conversationID: string }): Rea
               title: 'Delete Conversation',
               icon: Trash2,
               func: () => {
-                console.log('DELETE');
                 handleDeleteConversation();
               },
               disabled: renaming,
