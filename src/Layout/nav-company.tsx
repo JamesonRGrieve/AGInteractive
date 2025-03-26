@@ -1,7 +1,8 @@
 'use client';
 
 import { getGravatarUrl } from '@/auth/gravatar';
-import { useTeam, useTeams, useUser } from '@/auth/hooks/useUser';
+import { useTeam, useTeams } from '@/auth/hooks/useTeam';
+import { useUser } from '@/auth/hooks/useUser';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -16,10 +17,10 @@ import { CaretSortIcon } from '@radix-ui/react-icons';
 
 export function NavCompany() {
   const { data: company } = useTeam();
-  const { data: companies } = useTeams();
+  const { data: teams } = useTeams();
 
   const { data: user, mutate: mutateUser } = useUser();
-  const { data: activeCompany, mutate: mutateActiveCompany } = useTeam();
+  const { data: activeTeam, mutate: mutateActiveTeam } = useTeam();
 
   return (
     <SidebarMenu>
@@ -45,17 +46,17 @@ export function NavCompany() {
             side='top'
             align='center'
           >
-            <DropdownMenuLabel>Switch Company</DropdownMenuLabel>
-            {companies.map((company) => (
+            <DropdownMenuLabel>Switch Team</DropdownMenuLabel>
+            {teams.map((team) => (
               <DropdownMenuItem
-                key={company.id}
-                className={cn('capitalize', company.id == activeCompany?.id && 'bg-muted')}
+                key={team.id}
+                className={cn('capitalize', team.id == activeTeam?.id && 'bg-muted')}
                 onClick={() => {
                   mutateUser();
-                  mutateActiveCompany();
+                  mutateActiveTeam();
                 }}
               >
-                {company.name}
+                {team.name}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
