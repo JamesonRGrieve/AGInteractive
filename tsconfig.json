@@ -22,7 +22,19 @@
       {
         "name": "next"
       }
-    ]
+    ],
+        "paths": {
+      "@/*": ["../*"],
+      "@/jrg/*": ["../components/jrg/*"],
+      "@/next-log/*": ["../components/jrg/next-log/src/*"],
+      "@/zod2gql/*": ["../components/jrg/zod2gql/src/*"],
+      "@/auth/*": ["../components/jrg/auth/src/*"],
+      "@/appwrapper/*": ["../components/jrg/appwrapper/src/*"],
+      "@/dynamic-form/*": ["../components/jrg/dynamic-form/src/*"],
+      "@/interactive/*": ["../interactive/src/*"],
+      "@/interface/*": ["../interface/*"],
+      "@/iteration/*": ["../iteration/*"],
+    }
   },
   "include": ["src/**/*", "src/index.ts", "src/Style/**/*.css", "../interface/hooks/usePrompt.ts", "../interface/hooks/useProvider.ts", "../interface/hooks/z.ts", "../interface/hooks/useChain.ts", "../interface/hooks/useAgent.ts", "../interface/hooks/useCommand.ts", "../interface/Selectors/AgentSelector.tsx", "../interface/Selectors/PromptSelector.tsx", "../interface/Selectors/CommandSelector.tsx", "../interface/Selectors/ChainSelector.tsx"],
   "exclude": ["node_modules", "dist", "src/**/*.stories.*"]
