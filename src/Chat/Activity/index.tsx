@@ -63,7 +63,7 @@ const ActivityIcons: React.FC<ActivityIconsProps> = ({ state, type, createdAt, u
       {severities[(type?.name || 'thought').toLowerCase()].icon}
 
       {/* Time difference */}
-      {state.toLowerCase() !== 'info' && (
+      {state?.toLowerCase() !== 'info' && (
         <div className='whitespace-nowrap'>{getTimeDifference(createdAt, updatedAt || currentTime)}</div>
       )}
 
@@ -88,7 +88,7 @@ const ActivityContent: React.FC<ActivityContentProps> = ({ title, body, state, t
   if (!body) {
     return (
       <div
-        className={`overflow-hidden flex gap-2 agixt-activity agixt-activity-${state.toLowerCase()} text-foreground flex items-center cursor-pointer justify-start gap-2`}
+        className={`overflow-hidden flex gap-2 agixt-activity agixt-activity-${state?.toLowerCase()} text-foreground flex items-center cursor-pointer justify-start gap-2`}
       >
         <ActivityIcons state={state} type={type} createdAt={createdAt} updatedAt={updatedAt} />
         <MarkdownBlock content={title} />
@@ -100,7 +100,7 @@ const ActivityContent: React.FC<ActivityContentProps> = ({ title, body, state, t
     <Accordion type='single' collapsible className='w-full'>
       <AccordionItem value='item' className='border-0'>
         <AccordionTrigger
-          className={`overflow-hidden flex gap-2 agixt-activity agixt-activity-${state.toLowerCase()} px-4 border-l-8 text-foreground flex items-center cursor-pointer justify-start gap-2 hover:no-underline`}
+          className={`overflow-hidden flex gap-2 agixt-activity agixt-activity-${state?.toLowerCase()} px-4 border-l-8 text-foreground flex items-center cursor-pointer justify-start gap-2 hover:no-underline`}
         >
           <ActivityIcons state={state} type={type} createdAt={createdAt} updatedAt={updatedAt} />
           <MarkdownBlock content={title} />
@@ -164,7 +164,7 @@ export function ActivityBar({
                 )}
               >
                 <div
-                  className={`overflow-hidden flex gap-2 agixt-activity agixt-activity-${state.toLowerCase()} px-4 text-foreground flex items-center cursor-pointer justify-start gap-2`}
+                  className={`overflow-hidden flex gap-2 agixt-activity agixt-activity-${state?.toLowerCase()} px-4 text-foreground flex items-center cursor-pointer justify-start gap-2`}
                 >
                   <ActivityIcons state={state} type={type} createdAt={createdAt} updatedAt={updatedAt} />
                   <MarkdownBlock content={title} />

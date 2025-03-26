@@ -24,7 +24,10 @@ export function useConversation(id: string): SWRResponse<Conversation | null> {
     [`/conversation`, id],
     async (): Promise<Conversation | null> => {
       console.log('useConversation() ID: ', id);
-      if (!id || id === '-') return null;
+      if (!id || id === '-')
+        return {
+          messages: [],
+        };
       try {
         const query = ConversationSchema.toGQL('query', 'conversation', { id });
         log(['GQL useConversation() Query', query], {

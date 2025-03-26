@@ -1,7 +1,6 @@
 'use client';
 
-import log from '@/next-log/log';
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { useConversation } from '../hooks/useConversation';
 import { ActivityBar as ChatActivity } from './Activity';
 import Message from './Message/Message';
@@ -16,10 +15,10 @@ export default function ChatLog({
   const messagesEndRef = useRef(null);
   const { data: conversation } = useConversation(conversationID);
   console.log('SELECTED CONVERSATION', conversation);
-  useEffect(() => {
-    log(['Conversation mutated, scrolling to bottom.', conversation], { client: 3 });
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [conversation]);
+  // useEffect(() => {
+  //   log(['Conversation mutated, scrolling to bottom.', conversation], { client: 3 });
+  //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  // }, [conversation]);
 
   return (
     <div className='flex flex-col-reverse flex-grow overflow-y-auto bg-background pb-28' style={{ flexBasis: '0px' }}>

@@ -9,6 +9,7 @@ import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { mutate } from 'swr';
+import { useAgent } from '../../../interface/hooks/useAgent';
 import { UIProps } from '../AGInteractive';
 import { useConversations } from '../hooks/useConversation';
 import ChatBar from './ChatInput';
@@ -26,7 +27,7 @@ export default function Chat({
   const [loading, setLoading] = useState(false);
   const state = useContext(InteractiveConfigContext);
   const { mutate: mutateConversations } = useConversations();
-
+  const { data: agent } = useAgent();
   const { data: activeTeam } = useTeam();
   useEffect(() => {
     if (Array.isArray(state.overrides.conversation)) {
@@ -37,75 +38,64 @@ export default function Chat({
     }
   }, [state.overrides.conversation]);
   async function chat(messageTextBody, messageAttachedFiles): Promise<string> {
-    let conversationId;
-    const messages = [];
-    if (state.overrides.conversation === '-' || state.overrides.conversation === null) {
-      // 1. Create a new blank conversation
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URI}/v1/conversation`,
-        {
-          conversation: {
-            name: 'New Conversation',
-            description: 'A new conversation is born...',
-          },
-        },
-        {
-          headers: {
-            Authorization: getCookie('jwt'),
-          },
-        },
-      );
-
-      // 2. Get the conversation ID from the response
-      conversationId = response.data.conversation.id;
-
-      if (!conversationId) {
-        throw new Error('Failed to create new conversation');
-      }
-      mutateConversations();
-      // 3. Update the state with the new conversation ID and redirect
-      state.mutate((oldState) => ({
-        ...oldState,
-        overrides: { ...oldState.overrides, conversation: conversationId },
-      }));
-      router.push(`/chat/${conversationId}`);
-    }
-
-    messages.push({
-      role: 'user',
-      content: [
-        { type: 'text', text: messageTextBody },
-        ...Object.entries(messageAttachedFiles).map(([fileName, fileContent]: [string, string]) => ({
-          type: `${fileContent.split(':')[1].split('/')[0]}_url`,
-          file_name: fileName,
-          [`${fileContent.split(':')[1].split('/')[0]}_url`]: {
-            url: fileContent,
-          },
-        })), // Spread operator to include all file contents
-      ],
-      ...(activeTeam?.id ? { company_id: activeTeam?.id } : {}),
-      ...(getCookie('aginteractive-create-image') ? { create_image: getCookie('aginteractive-create-image') } : {}),
-      ...(getCookie('aginteractive-tts') ? { tts: getCookie('aginteractive-tts') } : {}),
-      ...(getCookie('aginteractive-websearch') ? { websearch: getCookie('aginteractive-websearch') } : {}),
-      ...(getCookie('aginteractive-analyze-user-input')
-        ? { analyze_user_input: getCookie('aginteractive-analyze-user-input') }
-        : {}),
-    });
-
-    const toOpenAI = {
-      messages: messages,
-      model: getCookie('aginteractive-agent'),
-      user: state.overrides.conversation || conversationId,
-    };
-
     setLoading(true);
-
-    log(['Sending: ', state.openai, toOpenAI], { client: 1 });
-    // const req = state.openai.chat.completions.create(toOpenAI);
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    mutate(conversationSWRPath + conversationId);
-
     try {
+      let conversationId = state.overrides.conversation;
+      const messages = [];
+      if (['-', null].includes(conversationId)) {
+        // 1. Create a new blank conversation
+        conversationId = (
+          await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URI}/v1/conversation`,
+            {
+              conversation: {
+                name: 'New Conversation',
+                description: 'A new conversation is born...',
+              },
+            },
+            {
+              headers: {
+                Authorization: getCookie('jwt'),
+              },
+            },
+          )
+        ).data.conversation.id;
+        mutateConversations();
+        router.push(`/chat/${conversationId}`);
+      }
+
+      messages.push({
+        role: 'user',
+        content: [
+          { type: 'text', text: messageTextBody },
+          ...Object.entries(messageAttachedFiles).map(([fileName, fileContent]: [string, string]) => ({
+            type: `${fileContent.split(':')[1].split('/')[0]}_url`,
+            file_name: fileName,
+            [`${fileContent.split(':')[1].split('/')[0]}_url`]: {
+              url: fileContent,
+            },
+          })), // Spread operator to include all file contents
+        ],
+        ...(activeTeam?.id ? { company_id: activeTeam?.id } : {}),
+        ...(getCookie('aginteractive-create-image') ? { create_image: getCookie('aginteractive-create-image') } : {}),
+        ...(getCookie('aginteractive-tts') ? { tts: getCookie('aginteractive-tts') } : {}),
+        ...(getCookie('aginteractive-websearch') ? { websearch: getCookie('aginteractive-websearch') } : {}),
+        ...(getCookie('aginteractive-analyze-user-input')
+          ? { analyze_user_input: getCookie('aginteractive-analyze-user-input') }
+          : {}),
+      });
+
+      const toOpenAI = {
+        messages: messages,
+        model: agent.name,
+        user: conversationId,
+      };
+
+      log(['Sending: ', state.openai, toOpenAI], { client: 1 });
+      // const req = state.openai.chat.completions.create(toOpenAI);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      mutate(conversationSWRPath + conversationId);
+
       const completionResponse = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URI}/v1/chat/completions`,
         {
@@ -158,6 +148,7 @@ export default function Chat({
         description: 'Error: ' + error,
         duration: 5000,
       });
+      console.error(error);
     }
   }
 
