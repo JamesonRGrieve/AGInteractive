@@ -1,5 +1,5 @@
 'use client';
-import AGInterfaceSDK from '@/lib/sdk';
+import AGInterfaceSDK from '@/src/lib/sdk';
 import OpenAI from 'openai';
 import { Context, createContext, useContext } from 'react';
 

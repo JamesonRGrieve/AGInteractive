@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SidebarMenuButton } from '@/components/ui/sidebar';
-import { formatTimeAgo } from '@/lib/time-ago';
+import { formatTimeAgo } from '@/src/lib/time-ago';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { PiBell, PiBellSimpleRingingFill } from 'react-icons/pi';

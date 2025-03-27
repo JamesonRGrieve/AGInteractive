@@ -2,7 +2,7 @@
 import { dummyNotifications } from '@/app/notifications/page';
 import { Card, CardContent } from '@/components/ui/card';
 import { TooltipBasic } from '@/components/ui/tooltip';
-import { formatTimeAgo } from '@/lib/time-ago';
+import { formatTimeAgo } from '@/src/lib/time-ago';
 import { useRouter } from 'next/navigation';
 
 export function Notifications({ notifications }: { notifications: typeof dummyNotifications }) {
