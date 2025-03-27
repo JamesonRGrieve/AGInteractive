@@ -2,13 +2,13 @@
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils.js';
+import { cn } from '@/lib/utils';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { ReactNode, useState } from 'react';
 import { LuRefreshCw as AutorenewOutlined } from 'react-icons/lu';
-import { Activity } from '../../hooks/z.js';
+import { Activity } from '../../hooks/z';
 import MarkdownBlock from '../Message/MarkdownBlock';
 import formatDate from '../Message/formatDate';
 import { severities } from './Severtities';
