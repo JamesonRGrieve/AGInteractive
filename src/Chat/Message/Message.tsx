@@ -2,8 +2,8 @@
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/useToast';
-import { formatTimeAgo } from '@/src/lib/time-ago';
-import { cn } from '@/src/lib/utils';
+import { formatTimeAgo } from '@/lib/time-ago';
+import { cn } from '@/lib/utils';
 import React, { useMemo, useRef, useState } from 'react';
 import { Message } from '../../hooks/z';
 import { MessageActions } from './Actions';

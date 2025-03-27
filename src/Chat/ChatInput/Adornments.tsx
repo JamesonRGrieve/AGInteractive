@@ -1,13 +1,9 @@
 'use client';
 
-import { ReactNode } from 'react';
-import { CheckCircle as LuCheckCircle } from 'lucide-react';
-import { LuPaperclip, LuSend, LuArrowUp, LuLoader, LuTrash2 } from 'react-icons/lu';
-import { OverrideSwitch } from '../OverrideSwitch';
-import { Button } from '@/components/ui/button';
-import { Tooltip, TooltipBasic, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import SwitchColorblind from '@/components/theme/SwitchColorblind';
+import SwitchDark from '@/components/theme/SwitchDark';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -17,8 +13,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import SwitchDark from '@/components/jrg/theme/SwitchDark';
-import SwitchColorblind from '@/components/jrg/theme/SwitchColorblind';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Tooltip, TooltipBasic, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { CheckCircle as LuCheckCircle } from 'lucide-react';
+import { ReactNode } from 'react';
+import { LuArrowUp, LuLoader, LuPaperclip, LuSend, LuTrash2 } from 'react-icons/lu';
+import { OverrideSwitch } from '../OverrideSwitch';
 
 export const Timer = ({ loading, timer }: { loading: boolean; timer: number }) => {
   const tooltipMessage = loading

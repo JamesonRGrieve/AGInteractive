@@ -5,7 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipBasic, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/useToast';
 import { InteractiveConfigContext } from '@/interactive/InteractiveConfigContext';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
 import clipboardCopy from 'clipboard-copy';
 import { getCookie } from 'cookies-next';
 import { Loader2, Volume2 } from 'lucide-react';

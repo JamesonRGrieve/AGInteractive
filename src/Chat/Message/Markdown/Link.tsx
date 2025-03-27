@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
 import React, { ReactNode } from 'react';
 // import Plyr from 'plyr-react';
 // import 'plyr-react/plyr.css';

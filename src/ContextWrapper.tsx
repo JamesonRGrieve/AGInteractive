@@ -1,6 +1,6 @@
 'use client';
+import AGInterfaceSDK from '@/lib/sdk';
 import log from '@/next-log/log';
-import AGInterfaceSDK from '@/src/lib/sdk';
 import { getCookie } from 'cookies-next';
 import OpenAI from 'openai';
 import React, { ReactNode, useState } from 'react';

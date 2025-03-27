@@ -7,7 +7,7 @@ import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, Sideba
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { getTimeDifference } from '@/interactive/Chat/Activity';
 import { InteractiveConfigContext } from '@/interactive/InteractiveConfigContext';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import dayjs from 'dayjs';
 import isToday from 'dayjs/plugin/isToday';

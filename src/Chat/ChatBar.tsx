@@ -1,8 +1,8 @@
 'use client';
 
-import { DropZone } from '@/components/jrg/dropzone/DropZone';
-import SwitchColorblind from '@/components/jrg/theme/SwitchColorblind';
-import SwitchDark from '@/components/jrg/theme/SwitchDark';
+import { DropZone } from '@/components/dropzone/DropZone';
+import SwitchColorblind from '@/components/theme/SwitchColorblind';
+import SwitchDark from '@/components/theme/SwitchDark';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {

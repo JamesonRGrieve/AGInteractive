@@ -2,16 +2,16 @@
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { cn } from '@/src/lib/utils.js';
+import { cn } from '@/lib/utils.js';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { ReactNode, useState } from 'react';
 import { LuRefreshCw as AutorenewOutlined } from 'react-icons/lu';
 import { Activity } from '../../hooks/z.js';
-import MarkdownBlock from '../Message/MarkdownBlock.tsx';
-import formatDate from '../Message/formatDate.ts';
-import { severities } from './Severtities.tsx';
+import MarkdownBlock from '../Message/MarkdownBlock';
+import formatDate from '../Message/formatDate';
+import { severities } from './Severtities';
 
 // Extend dayjs with plugins
 dayjs.extend(timezone);

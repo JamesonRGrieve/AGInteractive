@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
 import { CaretSortIcon } from '@radix-ui/react-icons';
 
 export function NavCompany() {
