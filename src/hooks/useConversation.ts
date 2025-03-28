@@ -4,7 +4,7 @@ import useSWR, { SWRResponse } from 'swr';
 import log from '@/next-log/log';
 import '@/zod2gql';
 
-import { GQLType } from '@/zod2gql';
+import z, { GQLType } from '@/zod2gql';
 import { convertTimestampsToLocal } from '../lib/timezone';
 import { createGraphQLClient } from './lib';
 import { Conversation, ConversationSchema, Message } from './z';
@@ -79,7 +79,7 @@ export function useConversations(): SWRResponse<Conversation[]> {
     '/conversations',
     async (): Promise<Conversation[]> => {
       try {
-        const query = ConversationSchema.toGQL('query', 'GetConversations');
+        const query = z.array(ConversationSchema).toGQL(GQLType.Query);
         log(['GQL useConversations() Query', query], {
           client: 3,
         });
