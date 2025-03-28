@@ -2,7 +2,7 @@ import useSWR, { SWRResponse } from 'swr';
 
 // Import all types from the centralized schema file
 import log from '@/next-log/log';
-import '@/zod2gql/zod2gql';
+import '@/zod2gql';
 
 import { convertTimestampsToLocal } from '../lib/timezone';
 import { createGraphQLClient } from './lib';

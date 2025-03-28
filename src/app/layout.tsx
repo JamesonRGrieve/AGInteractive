@@ -14,7 +14,7 @@ import { CommandMenu } from '@/interface/Selectors/Command';
 import { CommandMenuProvider } from '@/interface/Selectors/Command/command-menu-context';
 import { cn } from '@/lib/utils';
 import { SelectResident } from '@/ngpt/components/resident/select-resident';
-import '@/zod2gql/zod2gql';
+import '@/zod2gql';
 import { ViewVerticalIcon } from '@radix-ui/react-icons';
 import { cookies } from 'next/headers';
 import { useParams } from 'next/navigation';
