@@ -1,128 +1,148 @@
-import { z } from 'zod';
+import z from '@/zod2gql';
 // Activity schema
-export const ActivityTypeSchema = z.object({
-  id: z.string().uuid(),
-  name: z.string().min(1),
-  description: z.string().nullable(),
-  extensionId: z.string().uuid(),
-  // createdAt: z.string(),
-  // createdByUser: z.string().uuid(),
-  // updatedAt: z.string().optional(),
-  // updatedByUser: z.string().uuid().optional(),
-});
+export const ActivityTypeSchema = z
+  .object({
+    id: z.string().uuid(),
+    name: z.string().min(1),
+    description: z.string().nullable(),
+    extensionId: z.string().uuid(),
+    // createdAt: z.string(),
+    // createdByUser: z.string().uuid(),
+    // updatedAt: z.string().optional(),
+    // updatedByUser: z.string().uuid().optional(),
+  })
+  .describe('ActivityType');
 
 // Project schema based directly on the database model
-export const ProjectSchema = z.object({
-  id: z.string().uuid(),
-  name: z.string().min(1),
-  description: z.string().nullable(),
-  userId: z.string().uuid(),
-  createdAt: z.string(),
-  createdByUser: z.string().uuid(),
-  updatedAt: z.string().optional(),
-});
+export const ProjectSchema = z
+  .object({
+    id: z.string().uuid(),
+    name: z.string().min(1),
+    description: z.string().nullable(),
+    userId: z.string().uuid(),
+    createdAt: z.string(),
+    createdByUser: z.string().uuid(),
+    updatedAt: z.string().optional(),
+  })
+  .describe('Project');
 
 // ProjectContextPrompt schema
-export const ProjectContextPromptSchema = z.object({
-  id: z.string().uuid(),
-  promptId: z.string().uuid(),
-  projectId: z.string().uuid(),
-  createdAt: z.string(),
-  createdByUser: z.string().uuid(),
-  updatedAt: z.string().optional(),
-});
+export const ProjectContextPromptSchema = z
+  .object({
+    id: z.string().uuid(),
+    promptId: z.string().uuid(),
+    projectId: z.string().uuid(),
+    createdAt: z.string(),
+    createdByUser: z.string().uuid(),
+    updatedAt: z.string().optional(),
+  })
+  .describe('ProjectContextPrompt');
 // MessageActivity schema
-export const ActivitySchema = z.object({
-  id: z.string().uuid(),
-  title: z.string().min(1),
-  body: z.string().min(1),
-  state: z.string().optional(),
-  messageId: z.string().uuid(),
-  chainStepId: z.string().uuid(),
-  parentId: z.string().uuid().optional(),
-  createdAt: z.string(),
-  createdByUser: z.string().uuid(),
-  updatedAt: z.string().optional(),
-  updatedByUser: z.string().uuid().optional(),
-  type: ActivityTypeSchema.optional(),
-});
+export const ActivitySchema = z
+  .object({
+    id: z.string().uuid(),
+    title: z.string().min(1),
+    body: z.string().min(1),
+    state: z.string().optional(),
+    messageId: z.string().uuid(),
+    chainStepId: z.string().uuid(),
+    parentId: z.string().uuid().optional(),
+    createdAt: z.string(),
+    createdByUser: z.string().uuid(),
+    updatedAt: z.string().optional(),
+    updatedByUser: z.string().uuid().optional(),
+    type: ActivityTypeSchema.optional(),
+  })
+  .describe('Activity');
 // Message schema
-export const MessageSchema = z.object({
-  id: z.string().uuid(),
-  role: z.string(), // Assuming this matches RoleSchema
-  content: z.string().min(1),
-  conversationId: z.string().uuid(),
-  userId: z.string().uuid(),
-  parentId: z.string().uuid().optional(),
-  createdAt: z.string(),
-  createdByUser: z.string().uuid(),
-  updatedAt: z.string().optional(),
-  updatedByUser: z.string().uuid().optional(),
-  activities: z.array(ActivitySchema).optional(),
-});
+export const MessageSchema = z
+  .object({
+    id: z.string().uuid(),
+    role: z.string(), // Assuming this matches RoleSchema
+    content: z.string().min(1),
+    conversationId: z.string().uuid(),
+    userId: z.string().uuid(),
+    parentId: z.string().uuid().optional(),
+    createdAt: z.string(),
+    createdByUser: z.string().uuid(),
+    updatedAt: z.string().optional(),
+    updatedByUser: z.string().uuid().optional(),
+    activities: z.array(ActivitySchema).optional(),
+  })
+  .describe('Message');
 // Conversation schema
-export const ConversationSchema = z.object({
-  id: z.string().uuid(),
-  name: z.string().min(1),
-  description: z.string().nullable(),
-  projectId: z.string().uuid(),
-  userId: z.string().uuid(),
-  createdAt: z.string(),
-  createdByUser: z.string().uuid(),
-  updatedAt: z.string().optional(),
-  messages: z.array(MessageSchema).optional(),
-});
+export const ConversationSchema = z
+  .object({
+    id: z.string().uuid(),
+    name: z.string().min(1),
+    description: z.string().nullable(),
+    projectId: z.string().uuid(),
+    userId: z.string().uuid(),
+    createdAt: z.string(),
+    createdByUser: z.string().uuid(),
+    updatedAt: z.string().optional(),
+    messages: z.array(MessageSchema).optional(),
+  })
+  .describe('Conversation');
 
 // Artifact schema
-export const ArtifactSchema = z.object({
-  id: z.string().uuid(),
-  name: z.string().min(1),
-  relativePath: z.string().min(1),
-  hostedPath: z.string().min(1),
-  encrypted: z.boolean().default(false),
-  projectId: z.string().uuid(),
-  sourceMessageId: z.string().uuid(),
-  parentId: z.string().uuid().optional(),
-  createdAt: z.string(),
-  createdByUser: z.string().uuid(),
-  updatedAt: z.string().optional(),
-});
+export const ArtifactSchema = z
+  .object({
+    id: z.string().uuid(),
+    name: z.string().min(1),
+    relativePath: z.string().min(1),
+    hostedPath: z.string().min(1),
+    encrypted: z.boolean().default(false),
+    projectId: z.string().uuid(),
+    sourceMessageId: z.string().uuid(),
+    parentId: z.string().uuid().optional(),
+    createdAt: z.string(),
+    createdByUser: z.string().uuid(),
+    updatedAt: z.string().optional(),
+  })
+  .describe('Artifact');
 
 // MessageArtifact schema
-export const MessageArtifactSchema = z.object({
-  id: z.string().uuid(),
-  messageId: z.string().uuid(),
-  artifactId: z.string().uuid(),
-  createdAt: z.string(),
-  createdByUser: z.string().uuid(),
-  updatedAt: z.string().optional(),
-});
+export const MessageArtifactSchema = z
+  .object({
+    id: z.string().uuid(),
+    messageId: z.string().uuid(),
+    artifactId: z.string().uuid(),
+    createdAt: z.string(),
+    createdByUser: z.string().uuid(),
+    updatedAt: z.string().optional(),
+  })
+  .describe('MessageArtifact');
 
 // MessageFeedback schema
-export const MessageFeedbackSchema = z.object({
-  id: z.string().uuid(),
-  messageId: z.string().uuid(),
-  content: z.string().min(1),
-  positive: z.boolean().nullable(),
-  createdAt: z.string(),
-  createdByUser: z.string().uuid(),
-  updatedAt: z.string().optional(),
-});
+export const MessageFeedbackSchema = z
+  .object({
+    id: z.string().uuid(),
+    messageId: z.string().uuid(),
+    content: z.string().min(1),
+    positive: z.boolean().nullable(),
+    createdAt: z.string(),
+    createdByUser: z.string().uuid(),
+    updatedAt: z.string().optional(),
+  })
+  .describe('MessageFeedback');
 
 // UserNotification schema
-export const UserNotificationSchema = z.object({
-  id: z.string().uuid(),
-  type: z.string().min(1),
-  content: z.string().min(1),
-  read: z.boolean().default(false),
-  readAt: z.string().nullable(),
-  messageId: z.string().uuid().nullable(),
-  conversationId: z.string().uuid().nullable(),
-  userId: z.string().uuid(),
-  createdAt: z.string(),
-  createdByUser: z.string().uuid(),
-  updatedAt: z.string().optional(),
-});
+export const UserNotificationSchema = z
+  .object({
+    id: z.string().uuid(),
+    type: z.string().min(1),
+    content: z.string().min(1),
+    read: z.boolean().default(false),
+    readAt: z.string().nullable(),
+    messageId: z.string().uuid().nullable(),
+    conversationId: z.string().uuid().nullable(),
+    userId: z.string().uuid(),
+    createdAt: z.string(),
+    createdByUser: z.string().uuid(),
+    updatedAt: z.string().optional(),
+  })
+  .describe('UserNotification');
 
 // Type exports
 export type Project = z.infer<typeof ProjectSchema>;
