@@ -12,10 +12,10 @@ import { LuMenu as Menu } from 'react-icons/lu';
 import useSWR from 'swr';
 import { AgentSelector } from '../../interface/Selectors/AgentSelector';
 import PromptSelector from '../../interface/Selectors/PromptSelector';
-import Chat from './Chat/Chat';
+import Chat from './components/Chat/Chat';
+import ConversationSelector from './components/Selectors/ConversationSelector';
 import ContextWrapper from './ContextWrapper';
 import { InteractiveConfig, InteractiveConfigDefault, Overrides } from './InteractiveConfigContext';
-import ConversationSelector from './Selectors/ConversationSelector';
 
 export type FormProps = {
   fieldOverrides?: { [key: string]: ReactNode };
