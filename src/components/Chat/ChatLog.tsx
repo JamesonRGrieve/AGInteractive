@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { useConversation } from '../hooks/useConversation';
+import { useConversation } from '../../hooks/useConversation';
 import { ActivityBar as ChatActivity } from './Activity';
 import Message from './Message/Message';
 

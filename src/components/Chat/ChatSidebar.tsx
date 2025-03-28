@@ -8,7 +8,7 @@ import { Badge, Check, Download, Paperclip, Pencil, Plus, Trash2, Upload } from 
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { mutate } from 'swr';
-import { useConversation } from '../hooks/useConversation';
+import { useConversation } from '../../hooks/useConversation';
 
 const conversationSWRPath = '/conversation/';
 export function ChatSidebar({ conversationID }: { conversationID: string }): React.JSX.Element {

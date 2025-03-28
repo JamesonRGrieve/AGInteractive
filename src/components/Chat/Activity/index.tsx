@@ -8,7 +8,7 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { ReactNode, useState } from 'react';
 import { LuRefreshCw as AutorenewOutlined } from 'react-icons/lu';
-import { Activity } from '../../hooks/z';
+import { Activity } from '../../../hooks/z';
 import MarkdownBlock from '../Message/MarkdownBlock';
 import formatDate from '../Message/formatDate';
 import { severities } from './Severtities';

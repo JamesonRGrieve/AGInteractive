@@ -12,7 +12,7 @@ import { Loader2, Volume2 } from 'lucide-react';
 import { useContext, useRef, useState } from 'react';
 import { LuCopy, LuDownload, LuPen as LuEdit, LuTrash2 } from 'react-icons/lu';
 import { mutate } from 'swr';
-import { useConversations } from '../../hooks/useConversation';
+import { useConversations } from '../../../hooks/useConversation';
 import JRGDialog from './Dialog';
 
 export type MessageProps = {

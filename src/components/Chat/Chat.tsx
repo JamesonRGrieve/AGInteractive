@@ -2,15 +2,15 @@
 
 import { useTeam } from '@/auth/hooks/useTeam';
 import { InteractiveConfigContext, Overrides } from '@/interactive/InteractiveConfigContext';
+import { useAgent } from '@/interface/hooks/useAgent';
 import log from '@/next-log/log';
 import axios from 'axios';
 import { getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { mutate } from 'swr';
-import { useAgent } from '../../../interface/hooks/useAgent';
-import { UIProps } from '../AGInteractive';
-import { useConversations } from '../hooks/useConversation';
+import { UIProps } from '../../AGInteractive';
+import { useConversations } from '../../hooks/useConversation';
 import ChatBar from './ChatInput';
 import ChatLog from './ChatLog';
 import { ChatSidebar } from './ChatSidebar';

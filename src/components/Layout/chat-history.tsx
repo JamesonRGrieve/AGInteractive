@@ -5,7 +5,7 @@ import { Command, CommandInput, CommandItem, CommandList } from '@/components/ui
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { getTimeDifference } from '@/interactive/Chat/Activity';
+import { getTimeDifference } from '@/interactive/components/Chat/Activity';
 import { InteractiveConfigContext } from '@/interactive/InteractiveConfigContext';
 import { cn } from '@/lib/utils';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
@@ -15,8 +15,8 @@ import isYesterday from 'dayjs/plugin/isYesterday';
 import { usePathname, useRouter } from 'next/navigation';
 import { useContext } from 'react';
 import type { z } from 'zod';
-import { useConversations } from '../hooks/useConversation';
-import { ConversationSchema } from '../hooks/z';
+import { useConversations } from '../../hooks/useConversation';
+import { ConversationSchema } from '../../hooks/z';
 
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);

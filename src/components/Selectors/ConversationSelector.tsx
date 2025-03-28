@@ -10,7 +10,7 @@ import { setCookie } from 'cookies-next';
 import React, { useContext, useEffect, useState } from 'react';
 import { LuChevronDown, LuChevronUp, LuDownload, LuPencil, LuPlus, LuTrash2 } from 'react-icons/lu';
 import { mutate } from 'swr';
-import { useConversations } from '../hooks/useConversation';
+import { useConversations } from '../../hooks/useConversation';
 
 export default function ConversationSelector(): React.JSX.Element {
   const [dropDownOpen, setDropDownOpen] = useState(false);
