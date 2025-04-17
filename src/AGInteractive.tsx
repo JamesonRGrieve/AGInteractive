@@ -175,7 +175,7 @@ const Interactive = (props: Overrides & UIProps): React.JSX.Element => {
     return (
       await axios.get(`${process.env.NEXT_PUBLIC_API_URI}/v1/user`, {
         headers: {
-          Authorization: `${getCookie('jwt')}`,
+          Authorization: `Bearer ${getCookie('jwt')}`,
         },
       })
     ).data;
