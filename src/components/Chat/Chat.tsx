@@ -108,7 +108,7 @@ export default function Chat({
 
       setTimeout(() => {
         // TODO Yes I know this is awful - deadlines.
-        location.href = `${process.env.APP_URI}/chat/${conversationId}`;
+        router.push(`chat/${conversationId}`);
       }, 1000);
       if (completionResponse.status === 200) {
         const chatCompletion = completionResponse.data;
