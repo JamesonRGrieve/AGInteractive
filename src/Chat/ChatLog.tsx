@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useRef } from 'react';
 import { useConversation } from '../hooks/useConversation';
 import { ActivityBar as ChatActivity } from './Activity';
@@ -13,14 +14,18 @@ export default function ChatLog({
   alternateBackground?: string;
 }): React.JSX.Element {
   const messagesEndRef = useRef(null);
-  const { data: conversation, mutate } = useConversation(conversationID);
+  const router = useRouter();
+  const { isLoading, error, data: conversation, mutate } = useConversation(conversationID);
+  if ((!isLoading && !conversation) || error) {
+    router.push('/chat');
+  }
   // useEffect(() => {
   //   log(['Conversation mutated, scrolling to bottom.', conversation], { client: 3 });
   //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   // }, [conversation]);
   useEffect(() => {
     if (
-      conversation.messages.length > 0 &&
+      conversation?.messages?.length > 0 &&
       [...conversation.messages].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0]
         .role === 'USER'
     ) {
@@ -36,8 +41,8 @@ export default function ChatLog({
   return (
     <div className='flex flex-col-reverse flex-grow overflow-y-auto bg-background pb-28' style={{ flexBasis: '0px' }}>
       <div className='flex flex-col h-min max-w-100vw'>
-        {conversation.messages.length > 0 ? (
-          conversation.messages.map((message, index: number) => {
+        {conversation?.messages?.length > 0 ? (
+          conversation?.messages?.map((message, index: number) => {
             return (
               <>
                 <Message {...message} />
