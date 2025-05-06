@@ -4,6 +4,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import { expect, userEvent, waitFor, within } from '@storybook/test';
 import React from 'react';
 import ChatBar from './ChatBar';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 // Extended args interface that includes options for stories
 interface ChatBarStoryArgs {
@@ -22,9 +23,12 @@ const meta: Meta<React.ComponentProps<typeof ChatBar> & ChatBarStoryArgs> = {
         mutate: action('mutate state'),
         overrides: {},
       };
+  
       return (
         <InteractiveConfigContext.Provider value={state}>
-          <Story />
+          <TooltipProvider>
+            <Story />
+          </TooltipProvider>
         </InteractiveConfigContext.Provider>
       );
     },
