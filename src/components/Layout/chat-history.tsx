@@ -13,10 +13,11 @@ import dayjs from 'dayjs';
 import isToday from 'dayjs/plugin/isToday';
 import isYesterday from 'dayjs/plugin/isYesterday';
 import { usePathname, useRouter } from 'next/navigation';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import type { z } from 'zod';
 import { useConversations } from '../../hooks/useConversation';
 import { ConversationSchema } from '../../hooks/z';
+import React from 'react';
 
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);
@@ -42,6 +43,28 @@ export function ChatHistory() {
   const pathname = usePathname();
   const router = useRouter();
 
+  const [visibleCount, setVisibleCount] = useState(10);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    function updateCount() {
+      if (typeof window === 'undefined') {
+        setVisibleCount(10);
+        return;
+      }
+      const rowHeight = 56;
+      const reservedHeight = 400;
+      const height = window.innerHeight;
+      setVisibleCount(Math.max(1, Math.floor((height - reservedHeight) / rowHeight)));
+    }
+    updateCount();
+    window.addEventListener('resize', updateCount);
+    setMounted(true);
+    return () => window.removeEventListener('resize', updateCount);
+  }, []);
+
+  if (!mounted) return null;
+
   const isActive = (conversationId: string) => pathname.includes('chat') && pathname.includes(conversationId);
 
   const handleOpenConversation = ({ conversationId }: { conversationId: string | number }) => {
@@ -53,8 +76,9 @@ export function ChatHistory() {
     }));
   };
 
-  if (!conversationData || !conversationData.length || isLoading) return null;
-  const groupedConversations = groupConversations(allConversations.filter((conversation) => conversation.name !== '-'));
+  if (!allConversations || !allConversations.length) return null;
+  const visibleConversations = allConversations.filter((conversation) => conversation.name !== '-').slice(0, visibleCount);
+  const groupedConversations = groupConversations(visibleConversations);
 
   return (
     <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
@@ -110,7 +134,7 @@ export function ChatHistory() {
       ))}
       <SidebarMenu>
         <SidebarMenuItem>
-          {allConversations && allConversations?.length > 10 && (
+          {allConversations && allConversations?.length > visibleCount && (
             <ChatSearch {...{ conversationData: allConversations, handleOpenConversation }}>
               <SidebarMenuItem>
                 <SidebarMenuButton className='text-sidebar-foreground/70' side='left'>
@@ -157,7 +181,7 @@ function ChatSearch({
 }
 
 function groupConversations(conversations: Conversation[]) {
-  const groups = conversations.slice(0, 7).reduce<Record<string, Conversation[]>>(
+  const groups = conversations.reduce<Record<string, Conversation[]>>(
     (groups, conversation) => {
       const date = dayjs(conversation.updatedAt);
 
