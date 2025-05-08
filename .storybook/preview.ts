@@ -1,5 +1,7 @@
 import { initialize, mswLoader } from 'msw-storybook-addon';
 import React from 'react';
+import './../../app/globals.css';
+
 initialize({
   onUnhandledRequest: 'bypass', // Don't warn about unhandled requests
 });
