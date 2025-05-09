@@ -150,7 +150,7 @@ const Timer = ({ loading, timer }: { loading: boolean; timer: number }) => {
     <Tooltip>
       <TooltipTrigger asChild>
         <div className='flex items-center space-x-1'>
-          <span className='text-sm'>{(timer / 10).toFixed(1)}s</span>
+          <span data-testid='loading-timer' className='text-sm'>{(timer / 10).toFixed(1)}s</span>
           {loading ? <LuLoader className='animate-spin' /> : <LuCheckCircle className='text-green-500' />}
         </div>
       </TooltipTrigger>
@@ -167,7 +167,7 @@ const UploadFiles = ({ handleUploadFiles, message, uploadedFiles, disabled }: an
   return (
     <Tooltip>
       <TooltipTrigger>
-        <Button size='icon' onClick={() => document.getElementById('file-upload')?.click()}>
+        <Button aria-label='Upload Files' size='icon' onClick={() => document.getElementById('file-upload')?.click()}>
           <LuPaperclip />
         </Button>
         <label id='trigger-file-upload' htmlFor='file-upload' className='hidden' />
@@ -184,6 +184,7 @@ const SendMessage = ({ handleSend, message, uploadedFiles, disabled }: any) => {
       <TooltipTrigger>
         <Button
           id='send-message'
+          aria-label='Send Message'
           onClick={(event) => {
             event.preventDefault();
             handleSend(message, uploadedFiles);
@@ -205,7 +206,7 @@ const ResetConversation = ({ state, setCookie }: any) => {
       <DialogTrigger>
         <Tooltip>
           <TooltipTrigger>
-            <Button variant='outline' size='icon'>
+            <Button variant='outline' size='icon' data-testid="reset-conversation-button">
               <LuTrash2 className='w-4 h-4' />
             </Button>
           </TooltipTrigger>
