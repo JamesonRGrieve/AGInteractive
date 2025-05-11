@@ -43,28 +43,6 @@ export function ChatHistory() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const [visibleCount, setVisibleCount] = useState(10);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    function updateCount() {
-      if (typeof window === 'undefined') {
-        setVisibleCount(10);
-        return;
-      }
-      const rowHeight = 56;
-      const reservedHeight = 400;
-      const height = window.innerHeight;
-      setVisibleCount(Math.max(1, Math.floor((height - reservedHeight) / rowHeight)));
-    }
-    updateCount();
-    window.addEventListener('resize', updateCount);
-    setMounted(true);
-    return () => window.removeEventListener('resize', updateCount);
-  }, []);
-
-  if (!mounted) return null;
-
   const isActive = (conversationId: string) => pathname.includes('chat') && pathname.includes(conversationId);
 
   const handleOpenConversation = ({ conversationId }: { conversationId: string | number }) => {
@@ -77,7 +55,7 @@ export function ChatHistory() {
   };
 
   if (!allConversations || !allConversations.length) return null;
-  const visibleConversations = allConversations.filter((conversation) => conversation.name !== '-').slice(0, visibleCount);
+  const visibleConversations = allConversations.filter((conversation) => conversation.name !== '-');
   const groupedConversations = groupConversations(visibleConversations);
 
   return (
@@ -116,7 +94,6 @@ export function ChatHistory() {
                   </TooltipTrigger>
                   <TooltipContent side='right'>
                     <div>{conversation.name}</div>
-                    {/* TODO: Modify helper to handle all cases seconds, minutes, hours, days, weeks, months */}
                     {label === 'Today' ? (
                       <div>
                         Updated: {getTimeDifference(dayjs().format('YYYY-MM-DDTHH:mm:ssZ'), conversation.updatedAt)} ago
@@ -132,20 +109,6 @@ export function ChatHistory() {
           </SidebarMenu>
         </div>
       ))}
-      <SidebarMenu>
-        <SidebarMenuItem>
-          {allConversations && allConversations?.length > visibleCount && (
-            <ChatSearch {...{ conversationData: allConversations, handleOpenConversation }}>
-              <SidebarMenuItem>
-                <SidebarMenuButton className='text-sidebar-foreground/70' side='left'>
-                  <DotsHorizontalIcon className='text-sidebar-foreground/70' />
-                  <span>More</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </ChatSearch>
-          )}
-        </SidebarMenuItem>
-      </SidebarMenu>
     </SidebarGroup>
   );
 }
