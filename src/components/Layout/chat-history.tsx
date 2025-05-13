@@ -9,6 +9,7 @@ import { getTimeDifference } from '@/interactive/components/Chat/Activity';
 import { InteractiveConfigContext } from '@/interactive/InteractiveConfigContext';
 import { cn } from '@/lib/utils';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import { LuSearch as Search } from 'react-icons/lu';
 import dayjs from 'dayjs';
 import isToday from 'dayjs/plugin/isToday';
 import isYesterday from 'dayjs/plugin/isYesterday';
@@ -109,6 +110,20 @@ export function ChatHistory() {
           </SidebarMenu>
         </div>
       ))}
+      {allConversations && allConversations.length > 10 && (
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <ChatSearch {...{ conversationData: allConversations, handleOpenConversation }}>
+              <SidebarMenuItem>
+                <SidebarMenuButton className='text-sidebar-foreground/70' side='left'>
+                  <Search className='text-sidebar-foreground/70 w-4 h-4' />
+                  <span>Search Chats</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </ChatSearch>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      )}
     </SidebarGroup>
   );
 }
