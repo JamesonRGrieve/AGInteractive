@@ -9,14 +9,16 @@ import { getTimeDifference } from '@/interactive/components/Chat/Activity';
 import { InteractiveConfigContext } from '@/interactive/InteractiveConfigContext';
 import { cn } from '@/lib/utils';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import { LuSearch as Search } from 'react-icons/lu';
 import dayjs from 'dayjs';
 import isToday from 'dayjs/plugin/isToday';
 import isYesterday from 'dayjs/plugin/isYesterday';
 import { usePathname, useRouter } from 'next/navigation';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import type { z } from 'zod';
 import { useConversations } from '../../hooks/useConversation';
 import { ConversationSchema } from '../../hooks/z';
+import React from 'react';
 
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);
@@ -53,11 +55,26 @@ export function ChatHistory() {
     }));
   };
 
-  if (!conversationData || !conversationData.length || isLoading) return null;
-  const groupedConversations = groupConversations(allConversations.filter((conversation) => conversation.name !== '-'));
+  if (!allConversations || !allConversations.length) return null;
+  const visibleConversations = allConversations.filter((conversation) => conversation.name !== '-');
+  const groupedConversations = groupConversations(visibleConversations);
 
   return (
     <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
+      {allConversations && allConversations.length > 10 && (
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <ChatSearch {...{ conversationData: allConversations, handleOpenConversation }}>
+              <SidebarMenuItem>
+                <SidebarMenuButton className='text-sidebar-foreground/70' side='left'>
+                  <Search className='text-sidebar-foreground/70 w-4 h-4' />
+                  <span>Search Conversations</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </ChatSearch>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      )}
       {Object.entries(groupedConversations).map(([label, conversations]) => (
         <div key={label}>
           <SidebarGroupLabel>{label}</SidebarGroupLabel>
@@ -92,7 +109,6 @@ export function ChatHistory() {
                   </TooltipTrigger>
                   <TooltipContent side='right'>
                     <div>{conversation.name}</div>
-                    {/* TODO: Modify helper to handle all cases seconds, minutes, hours, days, weeks, months */}
                     {label === 'Today' ? (
                       <div>
                         Updated: {getTimeDifference(dayjs().format('YYYY-MM-DDTHH:mm:ssZ'), conversation.updatedAt)} ago
@@ -108,20 +124,6 @@ export function ChatHistory() {
           </SidebarMenu>
         </div>
       ))}
-      <SidebarMenu>
-        <SidebarMenuItem>
-          {allConversations && allConversations?.length > 10 && (
-            <ChatSearch {...{ conversationData: allConversations, handleOpenConversation }}>
-              <SidebarMenuItem>
-                <SidebarMenuButton className='text-sidebar-foreground/70' side='left'>
-                  <DotsHorizontalIcon className='text-sidebar-foreground/70' />
-                  <span>More</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </ChatSearch>
-          )}
-        </SidebarMenuItem>
-      </SidebarMenu>
     </SidebarGroup>
   );
 }
@@ -157,7 +159,7 @@ function ChatSearch({
 }
 
 function groupConversations(conversations: Conversation[]) {
-  const groups = conversations.slice(0, 7).reduce<Record<string, Conversation[]>>(
+  const groups = conversations.reduce<Record<string, Conversation[]>>(
     (groups, conversation) => {
       const date = dayjs(conversation.updatedAt);
 
