@@ -61,6 +61,20 @@ export function ChatHistory() {
 
   return (
     <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
+      {allConversations && allConversations.length > 10 && (
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <ChatSearch {...{ conversationData: allConversations, handleOpenConversation }}>
+              <SidebarMenuItem>
+                <SidebarMenuButton className='text-sidebar-foreground/70' side='left'>
+                  <Search className='text-sidebar-foreground/70 w-4 h-4' />
+                  <span>Search Conversations</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </ChatSearch>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      )}
       {Object.entries(groupedConversations).map(([label, conversations]) => (
         <div key={label}>
           <SidebarGroupLabel>{label}</SidebarGroupLabel>
@@ -110,20 +124,6 @@ export function ChatHistory() {
           </SidebarMenu>
         </div>
       ))}
-      {allConversations && allConversations.length > 10 && (
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <ChatSearch {...{ conversationData: allConversations, handleOpenConversation }}>
-              <SidebarMenuItem>
-                <SidebarMenuButton className='text-sidebar-foreground/70' side='left'>
-                  <Search className='text-sidebar-foreground/70 w-4 h-4' />
-                  <span>Search Chats</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </ChatSearch>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      )}
     </SidebarGroup>
   );
 }
