@@ -1,9 +1,11 @@
 import { InteractiveConfigContext } from '@/interactive/InteractiveConfigContext';
 import { action } from '@storybook/addon-actions';
 import { Meta, StoryObj } from '@storybook/react';
-import { expect, userEvent, waitFor, within } from '@storybook/test';
+import { expect, fn, userEvent, waitFor, within } from '@storybook/test';
 import React from 'react';
 import ChatBar from './ChatBar';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { screen } from '@storybook/testing-library';
 
 // Extended args interface that includes options for stories
 interface ChatBarStoryArgs {
@@ -22,9 +24,12 @@ const meta: Meta<React.ComponentProps<typeof ChatBar> & ChatBarStoryArgs> = {
         mutate: action('mutate state'),
         overrides: {},
       };
+  
       return (
         <InteractiveConfigContext.Provider value={state}>
-          <Story />
+          <TooltipProvider>
+            <Story />
+          </TooltipProvider>
         </InteractiveConfigContext.Provider>
       );
     },
@@ -179,7 +184,7 @@ export const Loading: Story = {
 
     // Verify timer is displayed when loading
     await waitFor(() => {
-      const timerText = canvas.getByText(/0\.0s/);
+      const timerText = canvas.getByTestId('loading-timer');
       expect(timerText).toBeInTheDocument();
     });
   },
@@ -219,6 +224,7 @@ export const AllFeaturesEnabled: Story = {
 export const SendMessageInteraction: Story = {
   args: {
     ...Default.args,
+    onSend: fn(),
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -247,18 +253,15 @@ export const ResetConversationInteraction: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    // Find and click the reset button
-    const resetButton = canvas.getByRole('button', { name: /Reset Conversation/i });
+    // Click the reset button
+    const resetButton = await canvas.findByTestId('reset-conversation-button');
     await userEvent.click(resetButton);
 
-    // Wait for dialog to appear
-    await waitFor(() => {
-      const dialogTitle = canvas.getByText('Reset Conversation');
-      expect(dialogTitle).toBeInTheDocument();
-    });
+    // Use findByText which awaits the element to appear in the DOM
+    const dialogTitle = await screen.findByText('Reset Conversation');
+    expect(dialogTitle).toBeInTheDocument();
 
-    // Find and click the Reset button in the dialog
-    const confirmButton = canvas.getByRole('button', { name: 'Reset' });
+    const confirmButton = await screen.findByRole('button', { name: 'Reset' });
     await userEvent.click(confirmButton);
   },
 };
