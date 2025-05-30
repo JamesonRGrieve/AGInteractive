@@ -1,14 +1,14 @@
 'use client';
 
+import MarkdownBlock from '@/components/markdown/MarkdownBlock';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useToast } from '@/hooks/useToast';
+import { Message } from '@/interactive/hooks/z';
 import { formatTimeAgo } from '@/lib/time-ago';
 import { cn } from '@/lib/utils';
 import React, { useMemo, useRef, useState } from 'react';
-import { Message } from '../../hooks/z';
 import { MessageActions } from './Actions';
 import AudioPlayer from './Audio';
-import MarkdownBlock from './MarkdownBlock';
 import formatDate from './formatDate';
 
 export type ChatItem = {
