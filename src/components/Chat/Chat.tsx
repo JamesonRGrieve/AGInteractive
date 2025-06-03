@@ -54,7 +54,7 @@ export default function Chat({
             },
             {
               headers: {
-                Authorization: getCookie('jwt'),
+                Authorization: `Bearer ${getCookie('jwt')}`,
               },
             },
           )

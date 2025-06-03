@@ -55,7 +55,7 @@ export function ChatHistory() {
 
   if (!conversationData || !conversationData.length || isLoading) return null;
   const groupedConversations = groupConversations(allConversations.filter((conversation) => conversation.name !== '-'));
-
+  console.log("CONVO DATA ==========>  ",conversationData)
   return (
     <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
       {Object.entries(groupedConversations).map(([label, conversations]) => (
@@ -109,8 +109,10 @@ export function ChatHistory() {
         </div>
       ))}
       <SidebarMenu>
-        <SidebarMenuItem>
-          {allConversations && allConversations?.length > 10 && (
+        {/* <SidebarMenuItem>
+          
+        </SidebarMenuItem> */}
+        {allConversations && allConversations?.length > 10 && (
             <ChatSearch {...{ conversationData: allConversations, handleOpenConversation }}>
               <SidebarMenuItem>
                 <SidebarMenuButton className='text-sidebar-foreground/70' side='left'>
@@ -120,7 +122,6 @@ export function ChatHistory() {
               </SidebarMenuItem>
             </ChatSearch>
           )}
-        </SidebarMenuItem>
       </SidebarMenu>
     </SidebarGroup>
   );

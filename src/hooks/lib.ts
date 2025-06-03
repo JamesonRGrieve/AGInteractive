@@ -13,7 +13,7 @@ import { GraphQLClient } from 'graphql-request';
  */
 export const createGraphQLClient = (): GraphQLClient =>
   new GraphQLClient(`${process.env.NEXT_PUBLIC_API_URI}/graphql`, {
-    headers: { authorization: getCookie('jwt') || '' },
+    headers: { authorization: `Bearer ${getCookie('jwt')}` || '' },
   });
 
 /**
