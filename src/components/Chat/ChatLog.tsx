@@ -8,12 +8,14 @@ import Message from './Message/Message';
 export default function ChatLog({
   conversationID,
   alternateBackground,
+  userID
 }: {
   conversationID: string;
   alternateBackground?: string;
+  userID:string;
 }): React.JSX.Element {
   const messagesEndRef = useRef(null);
-  const { data: conversation, mutate } = useConversation(conversationID);
+  const { data: conversation, mutate } = useConversation(conversationID,userID);
   // useEffect(() => {
   //   log(['Conversation mutated, scrolling to bottom.', conversation], { client: 3 });
   //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

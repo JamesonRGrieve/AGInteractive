@@ -14,6 +14,7 @@ import { useConversations } from '../../hooks/useConversation';
 import ChatBar from './ChatInput';
 import ChatLog from './ChatLog';
 import { ChatSidebar } from './ChatSidebar';
+import { useUser } from '@/auth/hooks/useUser';
 
 const conversationSWRPath = '/conversation/';
 export default function Chat({
@@ -28,6 +29,8 @@ export default function Chat({
   const { mutate: mutateConversations } = useConversations();
   const { data: agent } = useAgent();
   const { data: activeTeam } = useTeam();
+  const userData = useUser();
+
   useEffect(() => {
     if (Array.isArray(state.overrides.conversation)) {
       state.mutate((oldState) => ({
@@ -164,7 +167,7 @@ export default function Chat({
   return (
     <>
       <ChatSidebar conversationID={state.overrides.conversation} />
-      <ChatLog conversationID={state.overrides.conversation} alternateBackground={alternateBackground} />
+      <ChatLog conversationID={state.overrides.conversation} alternateBackground={alternateBackground} userID={userData.data.id} />
       <ChatBar
         onSend={chat}
         disabled={loading}
