@@ -95,7 +95,7 @@ export function ChatHistory() {
                     {/* TODO: Modify helper to handle all cases seconds, minutes, hours, days, weeks, months */}
                     {label === 'Today' ? (
                       <div>
-                        Updated: {getTimeDifference(dayjs().format('YYYY-MM-DDTHH:mm:ssZ'), conversation.updatedAt)} ago
+                        Updated: {getTimeDifference(dayjs().format('YYYY-MM-DDTHH:mm:ssZ'), dayjs.utc(conversation.updatedAt).toDate().toISOString())} ago
                       </div>
                     ) : (
                       <div>Updated: {dayjs(conversation.updatedAt).format('MMM DD YYYY')}</div>

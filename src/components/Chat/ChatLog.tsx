@@ -41,7 +41,7 @@ export default function ChatLog({
         {conversation.messages.length > 0 ? (
           conversation.messages.map((message, index: number) => {
             return (
-              <>
+              <React.Fragment key={message.id}>
                 <Message {...message} />
                 {message.activities
                   .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
@@ -54,7 +54,7 @@ export default function ChatLog({
                       children={message.activities.filter((x) => x.parentId == activity.id)}
                     />
                   ))}
-              </>
+              </React.Fragment>
             );
           })
         ) : (
