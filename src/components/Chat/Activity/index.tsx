@@ -24,7 +24,7 @@ export function getTimeDifference(createdAt1: string, createdAt2: string): strin
   // Parse dates ensuring they're treated in UTC to avoid timezone issues
   // This forces JavaScript to treat both dates in the same timezone context
   const date1 = new Date(new Date(createdAt1).toISOString());
-  const date2 = new Date(new Date(createdAt2 || new Date()).toISOString());
+  const date2 = new Date(new Date(createdAt2).toISOString());
 
   // Calculate the difference in milliseconds
   const diffInMs = Math.abs(date2.getTime() - date1.getTime());

@@ -78,9 +78,9 @@ export const ConversationSchema = z
     description: z.string().nullable(),
     // projectId: z.string().uuid(),
     userId: z.string().uuid(),
-    // createdAt: z.string(),
+    createdAt: z.string(),
     // createdByUser: z.string().uuid(),
-    // updatedAt: z.string().optional(),
+    updatedAt: z.string().optional(),
     // messages: z.array(MessageSchema).optional(),
   })
   .describe('Conversation');

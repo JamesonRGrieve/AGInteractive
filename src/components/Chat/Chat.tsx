@@ -48,7 +48,7 @@ export default function Chat({
             `${process.env.NEXT_PUBLIC_API_URI}/v1/conversation`,
             {
               conversation: {
-                name: 'New Conversation',
+                name: `New Conversation`,
                 description: 'A new conversation is born...',
               },
             },
