@@ -50,7 +50,11 @@ export function useConversation(id: string , userId:string): SWRResponse<Convers
             convertTimestampsToLocal(message, ['createdAt', 'updatedAt', 'deletedAt']),
           );
         }
-        conversation.messages =[];
+
+        if (!conversation.messages) {
+          conversation.messages = [];
+        }
+
         return conversation;
       } catch (error) {
         log(['GQL useConversation() Error', error], {
