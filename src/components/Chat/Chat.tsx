@@ -26,10 +26,10 @@ export default function Chat({
 }: Overrides & UIProps): React.JSX.Element {
   const [loading, setLoading] = useState(false);
   const state = useContext(InteractiveConfigContext);
-  const { mutate: mutateConversations } = useConversations();
+  const { data: user } = useUser();
+  const { mutate: mutateConversations } = useConversations(user?.id);
   const { data: agent } = useAgent();
   const { data: activeTeam } = useTeam();
-  const userData = useUser();
 
   useEffect(() => {
     if (Array.isArray(state.overrides.conversation)) {
@@ -167,7 +167,7 @@ export default function Chat({
   return (
     <>
       <ChatSidebar conversationID={state.overrides.conversation} />
-      <ChatLog conversationID={state.overrides.conversation} alternateBackground={alternateBackground} userID={userData.data.id} />
+      <ChatLog conversationID={state.overrides.conversation} alternateBackground={alternateBackground} userID={user.id} />
       <ChatBar
         onSend={chat}
         disabled={loading}

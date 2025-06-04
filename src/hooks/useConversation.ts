@@ -76,18 +76,20 @@ export function useConversation(id: string , userId:string): SWRResponse<Convers
  * Hook to fetch and manage all conversations with real-time updates
  * @returns SWR response containing array of conversations
  */
-export function useConversations(): SWRResponse<Conversation[]> {
+export function useConversations(id: string): SWRResponse<Conversation[]> {
   const client = createGraphQLClient();
-
+  if (!id || id === '-') {
+    return useSWR<Conversation[]>([], { fallbackData: [] });
+  }
   return useSWR<Conversation[]>(
-    '/conversations',
+    ['/conversations', id],
     async (): Promise<Conversation[]> => {
       try {
-        const query = z.array(ConversationSchema).toGQL(GQLType.Query);
+        const query = z.array(ConversationSchema).toGQL(GQLType.Query, { variables: { userId: id} });
         log(['GQL useConversations() Query', query], {
           client: 3,
         });
-        const response = await client.request<{ conversations: Conversation[] }>(query);
+        const response = await client.request<{ conversations: Conversation[] }>(query, { userId: id} );
         log(['GQL useConversation() Conversation ID', response.conversations], {
           client: 3,
         });
