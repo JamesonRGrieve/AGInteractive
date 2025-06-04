@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import { useConversation } from '../../hooks/useConversation';
 import { ActivityBar as ChatActivity } from './Activity';
 import Message from './Message/Message';
+import { useSearchParams } from 'next/navigation';
 
 export default function ChatLog({
   conversationID,
@@ -16,10 +17,29 @@ export default function ChatLog({
 }): React.JSX.Element {
   const messagesEndRef = useRef(null);
   const { data: conversation, mutate } = useConversation(conversationID,userID);
-  // useEffect(() => {
-  //   log(['Conversation mutated, scrolling to bottom.', conversation], { client: 3 });
-  //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  // }, [conversation]);
+
+  const params = useSearchParams();
+  let scrollToMessageId = params.get('message') || '';
+  let scrollToActivityId = params.get('activity') || '';
+
+  useEffect(() => {
+    if (scrollToMessageId) {
+      const el = document.getElementById(scrollToMessageId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }, [scrollToMessageId]);
+
+  useEffect(() => {
+    if (scrollToActivityId && !scrollToMessageId) {
+      const el = document.getElementById(scrollToActivityId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }, [scrollToActivityId]);
+
   useEffect(() => {
     if (
       conversation.messages.length > 0 &&

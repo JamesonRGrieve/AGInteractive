@@ -72,7 +72,7 @@ export default function Message({ content, role, createdAt, id }: Message): Reac
   const isUserMsgJustText = role === 'USER' && checkUserMsgJustText(content);
 
   return (
-    <div className={cn('m-3 overflow-hidden flex flex-col gap-2 min-w-48', isUserMsgJustText && 'max-w-[60%] self-end')}>
+    <div id={`message-${id}`} className={cn('m-3 overflow-hidden flex flex-col gap-2 min-w-48', isUserMsgJustText && 'max-w-[60%] self-end')}>
       {audios && audios.sources.length > 0 ? (
         <>
           {audios.message?.trim() && <MarkdownBlock content={audios.message} createdAt={createdAt} role={role} />}
