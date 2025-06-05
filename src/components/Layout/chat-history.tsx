@@ -62,7 +62,8 @@ export function ChatHistory() {
         <div key={label}>
           <SidebarGroupLabel>{label}</SidebarGroupLabel>
           <SidebarMenu className='ml-1'>
-            {conversations.map((conversation) => (
+            {conversations.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+              .slice(0, 6).map((conversation) => (
               <SidebarMenuItem key={conversation.id}>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -142,7 +143,7 @@ function ChatSearch({
         <Command className='[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5'>
           <CommandInput placeholder='Search Conversations...' />
           <CommandList>
-            {conversationData.map((conversation) => (
+            {conversationData.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()).map((conversation) => (
               <CommandItem asChild key={conversation.id}>
                 <DialogClose className='w-full' onClick={() => handleOpenConversation({ conversationId: conversation.id })}>
                   <span className='px-2'>{conversation.name}</span>
