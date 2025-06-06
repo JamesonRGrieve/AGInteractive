@@ -18,6 +18,7 @@ import { useContext } from 'react';
 import type { z } from 'zod';
 import { useConversations } from '../../hooks/useConversation';
 import { ConversationSchema } from '../../hooks/z';
+import { useUser } from '@/components/auth/src/hooks/useUser';
 
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);
@@ -33,8 +34,9 @@ type InteractiveConfig = {
 };
 
 export function ChatHistory() {
+  const { data: user } = useUser();
   const state = useContext(InteractiveConfigContext) as InteractiveConfig;
-  const { data: conversationData, isLoading } = useConversations() as {
+  const { data: conversationData, isLoading } = useConversations(user?.id) as {
     data: Conversation[] | undefined;
     isLoading: boolean;
   };
