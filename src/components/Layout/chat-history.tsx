@@ -1,9 +1,10 @@
 'use client';
 
+import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Command, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
-import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+// import { Command, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+// import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Sidebar, SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { getTimeDifference } from '@/interactive/components/Chat/Activity';
 import { InteractiveConfigContext } from '@/interactive/InteractiveConfigContext';
@@ -38,6 +39,7 @@ export function ChatHistory() {
     isLoading: boolean;
   };
 
+  const [showMore, setShowMore] = useState(false);
   const allConversations = conversationData || [];
   const pathname = usePathname();
   const router = useRouter();
@@ -54,16 +56,15 @@ export function ChatHistory() {
   };
 
   if (!conversationData || !conversationData.length || isLoading) return null;
-  const groupedConversations = groupConversations(allConversations.filter((conversation) => conversation.name !== '-'));
-
+  const groupedConversations = groupConversations(allConversations.filter((conversation) => conversation.name !== '-').sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()).slice(0, showMore ? allConversations.length : 6));
+  
   return (
     <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
       {Object.entries(groupedConversations).map(([label, conversations]) => (
         <div key={label}>
           <SidebarGroupLabel>{label}</SidebarGroupLabel>
           <SidebarMenu className='ml-1'>
-            {conversations.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
-              .slice(0, 6).map((conversation) => (
+             {conversations.map((conversation) => (
               <SidebarMenuItem key={conversation.id}>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -109,56 +110,54 @@ export function ChatHistory() {
           </SidebarMenu>
         </div>
       ))}
-      <SidebarMenu>
+      {allConversations.length > 6 && (
+        <SidebarMenu>
         <SidebarMenuItem>
-          {allConversations && allConversations?.length > 10 && (
-            <ChatSearch {...{ conversationData: allConversations, handleOpenConversation }}>
-              <SidebarMenuItem>
-                <SidebarMenuButton className='text-sidebar-foreground/70' side='left'>
-                  <DotsHorizontalIcon className='text-sidebar-foreground/70' />
-                  <span>More</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </ChatSearch>
-          )}
+          <SidebarMenuButton onClick={() => setShowMore(!showMore)} className='text-sidebar-foreground/70' side='left'>
+            <DotsHorizontalIcon className='text-sidebar-foreground/70' />
+            <span>{showMore ? 'Less' : 'More'}</span>
+          </SidebarMenuButton>
         </SidebarMenuItem>
-      </SidebarMenu>
+        </SidebarMenu>
+      )}
     </SidebarGroup>
   );
 }
 
-function ChatSearch({
-  conversationData,
-  handleOpenConversation,
-  children,
-}: {
-  conversationData: Conversation[];
-  handleOpenConversation: ({ conversationId }: { conversationId: string | number }) => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className='p-0 overflow-hidden shadow-lg'>
-        <Command className='[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5'>
-          <CommandInput placeholder='Search Conversations...' />
-          <CommandList>
-            {conversationData.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()).map((conversation) => (
-              <CommandItem asChild key={conversation.id}>
-                <DialogClose className='w-full' onClick={() => handleOpenConversation({ conversationId: conversation.id })}>
-                  <span className='px-2'>{conversation.name}</span>
-                </DialogClose>
-              </CommandItem>
-            ))}
-          </CommandList>
-        </Command>
-      </DialogContent>
-    </Dialog>
-  );
-}
+// Uncomment the following code if you want to use the ChatSearch component
+
+// function ChatSearch({
+//   conversationData,
+//   handleOpenConversation,
+//   children,
+// }: {
+//   conversationData: Conversation[];
+//   handleOpenConversation: ({ conversationId }: { conversationId: string | number }) => void;
+//   children: React.ReactNode;
+// }) {
+//   return (
+//     <Dialog>
+//       <DialogTrigger asChild>{children}</DialogTrigger>
+//       <DialogContent className='p-0 overflow-hidden shadow-lg'>
+//         <Command className='[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5'>
+//           <CommandInput placeholder='Search Conversations...' />
+//           <CommandList>
+//             {conversationData.map((conversation) => (
+//               <CommandItem asChild key={conversation.id}>
+//                 <DialogClose className='w-full' onClick={() => handleOpenConversation({ conversationId: conversation.id })}>
+//                   <span className='px-2'>{conversation.name}</span>
+//                 </DialogClose>
+//               </CommandItem>
+//             ))}
+//           </CommandList>
+//         </Command>
+//       </DialogContent>
+//     </Dialog>
+//   );
+// }
 
 function groupConversations(conversations: Conversation[]) {
-  const groups = conversations.slice(0, 7).reduce<Record<string, Conversation[]>>(
+  const groups = conversations.reduce<Record<string, Conversation[]>>(
     (groups, conversation) => {
       const date = dayjs(conversation.updatedAt);
 
