@@ -128,6 +128,7 @@ export type ActivityBarProps = Activity & {
  * Main ActivityBar component that renders activity items and their children
  */
 export function ActivityBar({
+  id,
   title,
   body,
   state,
@@ -155,6 +156,7 @@ export function ActivityBar({
   // Parent activity with children
   return (
     <div
+    id={`activity-${id}`}
       className={cn('w-full', !isRoot && 'border-t border-border', alternateBackground === 'primary' ? 'bg-primary/10' : '')}
     >
       <Tooltip>
