@@ -17,6 +17,7 @@ import { useContext } from 'react';
 import type { z } from 'zod';
 import { useConversations } from '../../hooks/useConversation';
 import { ConversationSchema } from '../../hooks/z';
+import { useUser } from '@/components/auth/src/hooks/useUser';
 
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);
@@ -32,8 +33,9 @@ type InteractiveConfig = {
 };
 
 export function ChatHistory() {
+  const { data: user } = useUser();
   const state = useContext(InteractiveConfigContext) as InteractiveConfig;
-  const { data: conversationData, isLoading } = useConversations() as {
+  const { data: conversationData, isLoading } = useConversations(user?.id) as {
     data: Conversation[] | undefined;
     isLoading: boolean;
   };
@@ -55,7 +57,7 @@ export function ChatHistory() {
 
   if (!conversationData || !conversationData.length || isLoading) return null;
   const groupedConversations = groupConversations(allConversations.filter((conversation) => conversation.name !== '-'));
-
+  
   return (
     <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
       {Object.entries(groupedConversations).map(([label, conversations]) => (
@@ -95,7 +97,7 @@ export function ChatHistory() {
                     {/* TODO: Modify helper to handle all cases seconds, minutes, hours, days, weeks, months */}
                     {label === 'Today' ? (
                       <div>
-                        Updated: {getTimeDifference(dayjs().format('YYYY-MM-DDTHH:mm:ssZ'), conversation.updatedAt)} ago
+                        Updated: {getTimeDifference(dayjs().format('YYYY-MM-DDTHH:mm:ssZ'), dayjs.utc(conversation.updatedAt).toDate().toISOString())} ago
                       </div>
                     ) : (
                       <div>Updated: {dayjs(conversation.updatedAt).format('MMM DD YYYY')}</div>
@@ -109,8 +111,10 @@ export function ChatHistory() {
         </div>
       ))}
       <SidebarMenu>
-        <SidebarMenuItem>
-          {allConversations && allConversations?.length > 10 && (
+        {/* <SidebarMenuItem>
+          
+        </SidebarMenuItem> */}
+        {allConversations && allConversations?.length > 6 && (
             <ChatSearch {...{ conversationData: allConversations, handleOpenConversation }}>
               <SidebarMenuItem>
                 <SidebarMenuButton className='text-sidebar-foreground/70' side='left'>
@@ -120,7 +124,6 @@ export function ChatHistory() {
               </SidebarMenuItem>
             </ChatSearch>
           )}
-        </SidebarMenuItem>
       </SidebarMenu>
     </SidebarGroup>
   );

@@ -18,25 +18,25 @@ import { Conversation, ConversationSchema, Message } from './z';
  * @param id - Conversation ID to fetch
  * @returns SWR response containing conversation data
  */
-export function useConversation(id: string): SWRResponse<Conversation | null> {
+export function useConversation(id: string , userId:string): SWRResponse<Conversation | null> {
   const client = createGraphQLClient();
 
   return useSWR<Conversation | null>(
-    [`/conversation`, id],
+    [`/conversation`, id,userId],
     async (): Promise<Conversation | null> => {
-      if (!id || id === '-')
+      if (!id || !userId || id === '-')
         return {
           messages: [],
         };
       try {
-        const query = ConversationSchema.toGQL(GQLType.Query, { variables: { id: id } });
+        const query = ConversationSchema.toGQL(GQLType.Query, { variables: { id: id , userId : userId } });
         log(['GQL useConversation() Query', query], {
           client: 3,
         });
         log(['GQL useConversation() Conversation ID', id], {
           client: 3,
         });
-        const response = await client.request<{ conversation: Conversation }>(query, { id: id });
+        const response = await client.request<{ conversation: Conversation }>(query, { id: id , userId : userId});
         log(['GQL useConversation() Conversations', response], {
           client: 3,
         });
@@ -49,6 +49,10 @@ export function useConversation(id: string): SWRResponse<Conversation | null> {
           conversation.messages = conversation.messages.map((message: Message) =>
             convertTimestampsToLocal(message, ['createdAt', 'updatedAt', 'deletedAt']),
           );
+        }
+
+        if (!conversation.messages) {
+          conversation.messages = [];
         }
 
         return conversation;
@@ -72,18 +76,20 @@ export function useConversation(id: string): SWRResponse<Conversation | null> {
  * Hook to fetch and manage all conversations with real-time updates
  * @returns SWR response containing array of conversations
  */
-export function useConversations(): SWRResponse<Conversation[]> {
+export function useConversations(id: string): SWRResponse<Conversation[]> {
   const client = createGraphQLClient();
-
+  if (!id || id === '-') {
+    return useSWR<Conversation[]>([], { fallbackData: [] });
+  }
   return useSWR<Conversation[]>(
-    '/conversations',
+    ['/conversations', id],
     async (): Promise<Conversation[]> => {
       try {
-        const query = z.array(ConversationSchema).toGQL(GQLType.Query);
+        const query = z.array(ConversationSchema).toGQL(GQLType.Query, { variables: { userId: id} });
         log(['GQL useConversations() Query', query], {
           client: 3,
         });
-        const response = await client.request<{ conversations: Conversation[] }>(query);
+        const response = await client.request<{ conversations: Conversation[] }>(query, { userId: id} );
         log(['GQL useConversation() Conversation ID', response.conversations], {
           client: 3,
         });

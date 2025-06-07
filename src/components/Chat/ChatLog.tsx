@@ -8,12 +8,14 @@ import Message from './Message/Message';
 export default function ChatLog({
   conversationID,
   alternateBackground,
+  userID
 }: {
   conversationID: string;
   alternateBackground?: string;
+  userID:string;
 }): React.JSX.Element {
   const messagesEndRef = useRef(null);
-  const { data: conversation, mutate } = useConversation(conversationID);
+  const { data: conversation, mutate } = useConversation(conversationID,userID);
   // useEffect(() => {
   //   log(['Conversation mutated, scrolling to bottom.', conversation], { client: 3 });
   //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -39,7 +41,7 @@ export default function ChatLog({
         {conversation.messages.length > 0 ? (
           conversation.messages.map((message, index: number) => {
             return (
-              <>
+              <React.Fragment key={message.id}>
                 <Message {...message} />
                 {message.activities
                   .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
@@ -52,7 +54,7 @@ export default function ChatLog({
                       children={message.activities.filter((x) => x.parentId == activity.id)}
                     />
                   ))}
-              </>
+              </React.Fragment>
             );
           })
         ) : (
