@@ -59,7 +59,7 @@ export function ChatHistory() {
 
   if (!conversationData || !conversationData.length || isLoading) return null;
   const groupedConversations = groupConversations(allConversations.filter((conversation) => conversation.name !== '-').sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()).slice(0, showMore ? allConversations.length : 6));
-  
+
   return (
     <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
       {Object.entries(groupedConversations).map(([label, conversations]) => (
@@ -99,7 +99,7 @@ export function ChatHistory() {
                     {/* TODO: Modify helper to handle all cases seconds, minutes, hours, days, weeks, months */}
                     {label === 'Today' ? (
                       <div>
-                        Updated: {getTimeDifference(dayjs().format('YYYY-MM-DDTHH:mm:ssZ'), conversation.updatedAt)} ago
+                        Updated: {getTimeDifference(dayjs().format('YYYY-MM-DDTHH:mm:ssZ'), dayjs.utc(conversation.updatedAt).toDate().toISOString())} ago
                       </div>
                     ) : (
                       <div>Updated: {dayjs(conversation.updatedAt).format('MMM DD YYYY')}</div>

@@ -14,6 +14,7 @@ import { useConversations } from '../../hooks/useConversation';
 import ChatBar from './ChatInput';
 import ChatLog from './ChatLog';
 import { ChatSidebar } from './ChatSidebar';
+import { useUser } from '@/auth/hooks/useUser';
 
 const conversationSWRPath = '/conversation/';
 export default function Chat({
@@ -25,9 +26,11 @@ export default function Chat({
 }: Overrides & UIProps): React.JSX.Element {
   const [loading, setLoading] = useState(false);
   const state = useContext(InteractiveConfigContext);
-  const { mutate: mutateConversations } = useConversations();
+  const { data: user } = useUser();
+  const { mutate: mutateConversations } = useConversations(user?.id);
   const { data: agent } = useAgent();
   const { data: activeTeam } = useTeam();
+
   useEffect(() => {
     if (Array.isArray(state.overrides.conversation)) {
       state.mutate((oldState) => ({
@@ -48,13 +51,13 @@ export default function Chat({
             `${process.env.NEXT_PUBLIC_API_URI}/v1/conversation`,
             {
               conversation: {
-                name: 'New Conversation',
+                name: `New Conversation`,
                 description: 'A new conversation is born...',
               },
             },
             {
               headers: {
-                Authorization: getCookie('jwt'),
+                Authorization: `Bearer ${getCookie('jwt')}`,
               },
             },
           )
@@ -164,7 +167,7 @@ export default function Chat({
   return (
     <>
       <ChatSidebar conversationID={state.overrides.conversation} />
-      <ChatLog conversationID={state.overrides.conversation} alternateBackground={alternateBackground} />
+      <ChatLog conversationID={state.overrides.conversation} alternateBackground={alternateBackground} userID={user.id} />
       <ChatBar
         onSend={chat}
         disabled={loading}
