@@ -41,12 +41,8 @@ export function useConversation(id: string , userId:string): SWRResponse<Convers
             validateStatus: (status: number) => [200, 403, 404].includes(status),
           }
         );
-        const data = response.data;
+        const data = response.data.conversation;
         if (!data || typeof data !== 'object') {
-          return { messages: [] };
-        }
-        // Optionally, filter by userId if needed
-        if (data.created_by_user_id !== userId && data.user_id !== userId) {
           return { messages: [] };
         }
         // Convert timestamps to local time
@@ -70,9 +66,9 @@ export function useConversation(id: string , userId:string): SWRResponse<Convers
     },
     {
       fallbackData: {
-        messages: [],
+        messages: [''],
       },
-      refreshInterval: 1000, // Real-time updates
+      //refreshInterval: 1000, // Real-time updates
     },
   );
 }
@@ -108,6 +104,50 @@ export function useConversations(userId: string): SWRResponse<Conversation[]> {
         return filtered.map((conversation: any) => convertTimestampsToLocal(conversation, ['created_at', 'updated_at']));
       } catch (error: any) {
         log(['REST useConversations() Error', error], {
+          client: 1,
+        });
+        return [];
+      }
+    },
+    { fallbackData: [] },
+  );
+}
+
+
+
+/**
+ * Hook to fetch and manage messages, filtered by conversation ID
+ * @param conversationId - Conversation ID to filter messages
+ * @param userId - User ID for authentication/filtering
+ * @returns SWR response containing array of messages
+ */
+export function useMessages(conversationId: string): SWRResponse<Message[]> {
+  return useSWR<Message[]>(
+    conversationId ? ['v1/message', conversationId] : null,
+    async (): Promise<Message[]> => {
+      try {
+        const jwt = getCookie('jwt');
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URI}/v1/message`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${jwt}`,
+            },
+            validateStatus: (status: number) => [200, 403].includes(status),
+          }
+        );
+        const data = response.data;
+        // Expecting data in the form { messages: [...] }
+        if (!data || !Array.isArray(data.messages)) {
+          return [];
+        }
+        // Filter messages by conversationId
+        const filtered = data.messages.filter((msg: any) => msg.conversation_id === conversationId);
+        // Optionally, convert timestamps to local if needed
+        return filtered.map((message: any) => convertTimestampsToLocal(message, ['created_at', 'updated_at', 'deleted_at']));
+      } catch (error: any) {
+        log(['REST useMessages() Error', error], {
           client: 1,
         });
         return [];

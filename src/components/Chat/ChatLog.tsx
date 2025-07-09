@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { useConversation } from '../../hooks/useConversation';
+import { useConversation, useMessages } from '../../hooks/useConversation';
 import { ActivityBar as ChatActivity } from './Activity';
 import Message from './Message/Message';
 import { useSearchParams } from 'next/navigation';
@@ -16,7 +16,8 @@ export default function ChatLog({
   userID:string;
 }): React.JSX.Element {
   const messagesEndRef = useRef(null);
-  const { data: conversation, mutate } = useConversation(conversationID,userID);
+  // const { data: conversation, mutate } = useConversation(conversationID,userID);
+  const {data:messages} = useMessages(conversationID);
 
   const params = useSearchParams();
   let scrollToMessageId = params.get('message') || '';
@@ -40,30 +41,30 @@ export default function ChatLog({
     }
   }, [scrollToActivityId]);
 
-  useEffect(() => {
-    if (
-      conversation.messages.length > 0 &&
-      [...conversation.messages].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0]
-        .role === 'USER'
-    ) {
-      setTimeout(() => {
-        mutate();
-      }, 1000);
-    } else {
-      setTimeout(() => {
-        mutate();
-      }, 5000);
-    }
-  }, [conversation]);
+  // useEffect(() => {
+  //   if (
+  //     conversation.messages.length > 0 &&
+  //     [...conversation.messages].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0]
+  //       .role === 'USER'
+  //   ) {
+  //     setTimeout(() => {
+  //       mutate();
+  //     }, 1000);
+  //   } else {
+  //     setTimeout(() => {
+  //       mutate();
+  //     }, 5000);
+  //   }
+  // }, [conversation]);
   return (
     <div className='flex flex-col-reverse flex-grow overflow-y-auto bg-background pb-28' style={{ flexBasis: '0px' }}>
       <div className='flex flex-col h-min max-w-100vw'>
-        {conversation.messages.length > 0 ? (
-          conversation.messages.map((message, index: number) => {
+        {messages.length > 0 ? (
+          messages.map((message, index: number) => {
             return (
               <React.Fragment key={message.id}>
-                <Message {...message} />
-                {message.activities
+                <Message {...message} userId={userID}/>
+                {/* {message.activities
                   .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
                   .filter((x) => x.parentId == null)
                   .map((activity) => (
@@ -73,7 +74,7 @@ export default function ChatLog({
                       alternateBackground={alternateBackground}
                       children={message.activities.filter((x) => x.parentId == activity.id)}
                     />
-                  ))}
+                  ))} */}
               </React.Fragment>
             );
           })

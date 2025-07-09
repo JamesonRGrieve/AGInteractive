@@ -39,7 +39,7 @@ const checkUserMsgJustText = (content: string) => {
   );
 };
 
-export default function Message({ content, role, createdAt, id }: Message): React.JSX.Element {
+export default function Message({ content, role, created_at:createdAt, id, user_id , userId }: Message): React.JSX.Element {
   const [updatedMessage, setUpdatedMessage] = useState(content);
   const { toast } = useToast();
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
@@ -69,7 +69,7 @@ export default function Message({ content, role, createdAt, id }: Message): Reac
       sources: audioSources,
     };
   }, [content]);
-  const isUserMsgJustText = role === 'USER' && checkUserMsgJustText(content);
+  const isUserMsgJustText = user_id === userId && checkUserMsgJustText(content);
 
   return (
     <div id={`message-${id}`} className={cn('m-3 overflow-hidden flex flex-col gap-2 min-w-48', isUserMsgJustText && 'max-w-[60%] self-end')}>
@@ -83,7 +83,7 @@ export default function Message({ content, role, createdAt, id }: Message): Reac
       ) : (
         <div
           className={
-            role === 'USER'
+            user_id === userId
               ? 'chat-log-message-user bg-primary rounded-3xl py-1 rounded-br-none px-5 text-primary-foreground'
               : 'chat-log-message-ai p-0 pt-2 text-foreground'
           }
@@ -92,8 +92,8 @@ export default function Message({ content, role, createdAt, id }: Message): Reac
         </div>
       )}
 
-      <div className={cn('flex items-center flex-wrap', role === 'USER' && 'flex-row-reverse')}>
-        <CreatedAt createdAt={createdAt} role={role} />
+      <div className={cn('flex items-center flex-wrap', user_id === userId && 'flex-row-reverse')}>
+        <CreatedAt createdAt={createdAt} role={role}  user_id={user_id} userId={userId}/>
 
         <MessageActions
           createdAt={createdAt}
@@ -110,11 +110,11 @@ export default function Message({ content, role, createdAt, id }: Message): Reac
   );
 }
 
-export function CreatedAt({ role, createdAt }: { role: string; createdAt: string }) {
+export function CreatedAt({ role, createdAt , user_id , userId }: { role: string; createdAt: string , user_id : string , userId : string }) {
   const [open, setOpen] = useState(false);
 
   if (createdAt === '') return null;
-  const roleLabel = role === 'USER' ? 'You' : role;
+  const roleLabel = user_id === userId ? 'You' : role;
 
   const timeAgo = formatTimeAgo(createdAt);
   const date = formatDate(createdAt, false);
