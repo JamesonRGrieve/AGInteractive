@@ -66,7 +66,7 @@ export function useConversation(id: string , userId:string): SWRResponse<Convers
     },
     {
       fallbackData: {
-        messages: [''],
+        messages: [],
       },
       //refreshInterval: 1000, // Real-time updates
     },
@@ -153,6 +153,9 @@ export function useMessages(conversationId: string): SWRResponse<Message[]> {
         return [];
       }
     },
-    { fallbackData: [] },
+    {
+      fallbackData: [],
+      refreshInterval: 1000 * 10, // Real-time updates
+    },
   );
 }
