@@ -8,35 +8,44 @@ import { Badge, Check, Download, Paperclip, Pencil, Plus, Trash2, Upload } from 
 import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { mutate } from 'swr';
-import { useConversation } from '../../hooks/useConversation';
+import { useConversation, useConversations } from '../../hooks/useConversation';
+import { useUser } from '@/components/auth/src/hooks/useUser';
+import axios from 'axios';
+import { getCookie } from 'cookies-next';
 
 const conversationSWRPath = '/conversation/';
 export function ChatSidebar({ conversationID }: { conversationID: string }): React.JSX.Element {
   const [loading, setLoading] = useState(false);
   const state = useContext(InteractiveConfigContext);
-  const { data: currentConversation } = useConversation(conversationID);
+  const { data: user } = useUser();
+  const { data: currentConversation, mutate:updateConvo } = useConversation(conversationID,user?.id);
+  const {mutate:mutateConversations} = useConversations(user?.id);
+  const router = useRouter();
+  const [newName, setNewName] = useState(currentConversation?.name || '');
+
   const handleDeleteConversation = async (): Promise<void> => {
-    await state.sdk.deleteConversation(currentConversation?.id || '-');
+    await deleteConversation(currentConversation?.id || '-');
     await mutate();
     state.mutate((oldState) => ({
       ...oldState,
       overrides: { ...oldState.overrides, conversation: '-' },
     }));
+    router.push('/chat');
   };
 
   const handleExportConversation = async (): Promise<void> => {
     // Get the full conversation content
-    const conversationContent = await state.sdk.getConversation('', currentConversation?.id || '-');
-
+    //const conversationContent = await state.sdk.getConversation('', currentConversation?.id || '-');
+    const conversationContent = await getConversation(currentConversation?.id || '-');
     // Format the conversation for export
     const exportData = {
       name: currentConversation?.name || 'New',
       id: currentConversation?.id || '-',
       createdAt: currentConversation?.createdAt || new Date().toISOString(),
-      messages: conversationContent.map((msg) => ({
-        role: msg.role,
-        content: msg.message,
-        createdAt: msg.createdAt,
+      messages: conversationContent.filter((msg)=>msg.conversation_id === currentConversation?.id).map((msg) => ({
+        role: msg?.role || '',
+        content: msg.content,
+        createdAt: msg.created_at,
       })),
     };
 
@@ -51,10 +60,7 @@ export function ChatSidebar({ conversationID }: { conversationID: string }): Rea
     element.click();
     document.body.removeChild(element);
   };
-
-  const [newName, setNewName] = useState('');
-  const router = useRouter();
-
+  
   useEffect(() => {
     mutate(conversationSWRPath + state.overrides.conversation);
   }, [state.overrides.conversation]);
@@ -73,7 +79,7 @@ export function ChatSidebar({ conversationID }: { conversationID: string }): Rea
       setNewName(currentConversation?.name || '');
     }
   }, [renaming, currentConversation]);
-
+  console.log('rename',newName)
   useEffect(() => {
     return () => {
       setLoading(false);
@@ -114,11 +120,14 @@ export function ChatSidebar({ conversationID }: { conversationID: string }): Rea
               icon: renaming ? Check : Pencil,
               func: renaming
                 ? () => {
-                    state.sdk.renameConversation(state.agent, currentConversation.id, newName);
+                    //state.sdk.renameConversation(state.agent, currentConversation.id, newName);
+                    renameConversation(currentConversation.id, newName);
                     setRenaming(false);
+                    updateConvo();
+                    mutateConversations();
                   }
                 : () => setRenaming(true),
-              disabled: false,
+              disabled:conversationID ? false : true,
             },
             {
               title: 'Import Conversation',
@@ -133,7 +142,7 @@ export function ChatSidebar({ conversationID }: { conversationID: string }): Rea
               title: 'Export Conversation',
               icon: Download,
               func: () => handleExportConversation(),
-              disabled: renaming,
+              disabled: !renaming && conversationID ? false : true,
             },
             {
               title: 'Delete Conversation',
@@ -141,7 +150,7 @@ export function ChatSidebar({ conversationID }: { conversationID: string }): Rea
               func: () => {
                 handleDeleteConversation();
               },
-              disabled: renaming,
+              disabled: !renaming && conversationID ? false : true,
             },
           ].map(
             (item) =>
@@ -158,4 +167,52 @@ export function ChatSidebar({ conversationID }: { conversationID: string }): Rea
       </SidebarGroup>
     </SidebarContent>
   );
+}
+
+export async function deleteConversation(conversationId: string) {
+  const jwt = getCookie('jwt');
+  const response = await axios.delete(
+    `${process.env.NEXT_PUBLIC_API_URI}/v1/conversation/${conversationId}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${jwt}`,
+      },
+    }
+  );
+  return response.data;
+}
+
+export async function renameConversation(conversationId: string, newName: string) {
+  const jwt = getCookie('jwt');
+  const response = await axios.put(
+    `${process.env.NEXT_PUBLIC_API_URI}/v1/conversation/${conversationId}`,
+    {
+      conversation: {
+        name: newName,
+      },
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${jwt}`,
+      },
+    }
+  );
+  return response.data;
+}
+
+export async function getConversation(conversationId: string) {
+  if(!conversationId) return [];
+  const jwt = getCookie('jwt');
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URI}/v1/message`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${jwt}`,
+      },
+    }
+  );
+  return response.data.messages;
 }

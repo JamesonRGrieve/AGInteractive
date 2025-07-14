@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { mutate } from 'swr';
 import { UIProps } from '../../AGInteractive';
-import { useConversations } from '../../hooks/useConversation';
+import { useConversations, useMessages } from '../../hooks/useConversation';
 import ChatBar from './ChatInput';
 import ChatLog from './ChatLog';
 import { ChatSidebar } from './ChatSidebar';
@@ -30,6 +30,8 @@ export default function Chat({
   const { mutate: mutateConversations } = useConversations(user?.id);
   const { data: agent } = useAgent();
   const { data: activeTeam } = useTeam();
+  const { mutate:mutateMessages } = useMessages(state.overrides.conversation);
+  const router = useRouter();
 
   useEffect(() => {
     if (Array.isArray(state.overrides.conversation)) {
@@ -62,91 +64,113 @@ export default function Chat({
             },
           )
         ).data.conversation.id;
+        router.push(`chat/${conversationId}`);
         mutateConversations();
       }
-
-      messages.push({
-        role: 'user',
-        content: [
-          { type: 'text', text: messageTextBody },
-          ...Object.entries(messageAttachedFiles).map(([fileName, fileContent]: [string, string]) => ({
-            type: `${fileContent.split(':')[1].split('/')[0]}_url`,
-            file_name: fileName,
-            [`${fileContent.split(':')[1].split('/')[0]}_url`]: {
-              url: fileContent,
-            },
-          })), // Spread operator to include all file contents
-        ],
-        ...(activeTeam?.id ? { company_id: activeTeam?.id } : {}),
-        ...(getCookie('aginteractive-create-image') ? { create_image: getCookie('aginteractive-create-image') } : {}),
-        ...(getCookie('aginteractive-tts') ? { tts: getCookie('aginteractive-tts') } : {}),
-        ...(getCookie('aginteractive-websearch') ? { websearch: getCookie('aginteractive-websearch') } : {}),
-        ...(getCookie('aginteractive-analyze-user-input')
-          ? { analyze_user_input: getCookie('aginteractive-analyze-user-input') }
-          : {}),
-      });
-
-      const toOpenAI = {
-        messages: messages,
-        model: agent.name,
-        user: conversationId,
-      };
-
-      log(['Sending: ', state.openai, toOpenAI], { client: 1 });
-      // const req = state.openai.chat.completions.create(toOpenAI);
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      mutate(conversationSWRPath + conversationId);
-
-      const completionResponse = axios.post(
-        `${process.env.NEXT_PUBLIC_API_URI}/v1/chat/completions`,
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URI}/v1/message`,
         {
-          ...toOpenAI,
+          message: {
+            parent_id: null,
+            parent: null,
+            children: [],
+            conversation_id: conversationId,
+            content: messageTextBody,
+            user_id: user.id,
+          },
         },
         {
           headers: {
-            Authorization: getCookie('jwt'),
+            Authorization: `Bearer ${getCookie('jwt')}`,
+            'Content-Type': 'application/json',
           },
         },
       );
+      mutateMessages();
+      setLoading(false);
 
-      setTimeout(() => {
-        // TODO Yes I know this is awful - deadlines.
-        router.push(`chat/${conversationId}`);
-      }, 1000);
-      if (completionResponse.status === 200) {
-        const chatCompletion = completionResponse.data;
-        log(['RESPONSE: ', chatCompletion], { client: 1 });
-        // let response;
-        // if (state.overrides.conversation === '-') {
-        //   response = await state.sdk.renameConversation(state.agent, state.overrides.conversation);
-        //   // response = await axios.put(
-        //   //   `${process.env.NEXT_PUBLIC_API_URI}/api/conversation`,
-        //   //   {
-        //   //     agent_name: state.agent,
-        //   //     conversation_name: state.overrides?.conversation,
-        //   //     new_name: '-',
-        //   //   },
-        //   //   {
-        //   //     headers: {
-        //   //       Authorization: getCookie('jwt'),
-        //   //     },
-        //   //   },
-        //   // );
-        //   await mutate('/conversation');
-        //   log([response], { client: 1 });
-        // }        mutate(conversationSWRPath + response);
-        setLoading(false);
+      // messages.push({
+      //   role: 'user',
+      //   content: [
+      //     { type: 'text', text: messageTextBody },
+      //     ...Object.entries(messageAttachedFiles).map(([fileName, fileContent]: [string, string]) => ({
+      //       type: `${fileContent.split(':')[1].split('/')[0]}_url`,
+      //       file_name: fileName,
+      //       [`${fileContent.split(':')[1].split('/')[0]}_url`]: {
+      //         url: fileContent,
+      //       },
+      //     })), // Spread operator to include all file contents
+      //   ],
+      //   ...(activeTeam?.id ? { company_id: activeTeam?.id } : {}),
+      //   ...(getCookie('aginteractive-create-image') ? { create_image: getCookie('aginteractive-create-image') } : {}),
+      //   ...(getCookie('aginteractive-tts') ? { tts: getCookie('aginteractive-tts') } : {}),
+      //   ...(getCookie('aginteractive-websearch') ? { websearch: getCookie('aginteractive-websearch') } : {}),
+      //   ...(getCookie('aginteractive-analyze-user-input')
+      //     ? { analyze_user_input: getCookie('aginteractive-analyze-user-input') }
+      //     : {}),
+      // });
 
-        mutate('/user');
+      // const toOpenAI = {
+      //   messages: messages,
+      //   model: agent.name,
+      //   user: conversationId,
+      // };
 
-        if (chatCompletion?.choices[0]?.message.content.length > 0) {
-          return chatCompletion.choices[0].message.content;
-        } else {
-          throw '1 Failed to get response from the agent';
-        }
-      } else {
-        throw '2 Failed to get response from the agent';
-      }
+      // log(['Sending: ', state.openai, toOpenAI], { client: 1 });
+      // // const req = state.openai.chat.completions.create(toOpenAI);
+      // await new Promise((resolve) => setTimeout(resolve, 100));
+      // mutate(conversationSWRPath + conversationId);
+
+      // const completionResponse = axios.post(
+      //   `${process.env.NEXT_PUBLIC_API_URI}/v1/chat/completions`,
+      //   {
+      //     ...toOpenAI,
+      //   },
+      //   {
+      //     headers: {
+      //       Authorization: getCookie('jwt'),
+      //     },
+      //   },
+      // );
+
+      // setTimeout(() => {
+      //   // TODO Yes I know this is awful - deadlines.
+      //   router.push(`chat/${conversationId}`);
+      // }, 1000);
+      // if (completionResponse.status === 200) {
+      //   const chatCompletion = completionResponse.data;
+      //   log(['RESPONSE: ', chatCompletion], { client: 1 });
+      //   // let response;
+      //   // if (state.overrides.conversation === '-') {
+      //   //   response = await state.sdk.renameConversation(state.agent, state.overrides.conversation);
+      //   //   // response = await axios.put(
+      //   //   //   `${process.env.NEXT_PUBLIC_API_URI}/api/conversation`,
+      //   //   //   {
+      //   //   //     agent_name: state.agent,
+      //   //   //     conversation_name: state.overrides?.conversation,
+      //   //   //     new_name: '-',
+      //   //   //   },
+      //   //   //   {
+      //   //   //     headers: {
+      //   //   //       Authorization: getCookie('jwt'),
+      //   //   //     },
+      //   //   //   },
+      //   //   // );
+      //   //   await mutate('/conversation');
+      //   //   log([response], { client: 1 });
+      //   // }        mutate(conversationSWRPath + response);
+      //   setLoading(false);
+
+      //   mutate('/user');
+
+      //   if (chatCompletion?.choices[0]?.message.content.length > 0) {
+      //     return chatCompletion.choices[0].message.content;
+      //   } else {
+      //     throw '1 Failed to get response from the agent';
+      //   }
+      // } else {
+      //   throw '2 Failed to get response from the agent';
+      // }
     } catch (error) {
       setLoading(false);
       // toast({
@@ -158,7 +182,6 @@ export default function Chat({
     }
   }
 
-  const router = useRouter();
 
   useEffect(() => {
     mutate(conversationSWRPath + state.overrides.conversation);
