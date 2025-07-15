@@ -55,6 +55,7 @@ export default function Chat({
               conversation: {
                 name: `New Conversation`,
                 description: 'A new conversation is born...',
+                user_id: user.id
               },
             },
             {
