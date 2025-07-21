@@ -27,6 +27,11 @@ export type MessageProps = {
   setLoading: (loading: boolean) => void;
 };
 
+interface MsgExt extends Message {
+  loggedUser: string,
+  role: string
+}
+
 const checkUserMsgJustText = (content: string) => {
   const message = content;
   const hasMarkdownTable = /\n\|.*\|\n(\|-+\|.*\n)?/.test(message);
@@ -39,7 +44,7 @@ const checkUserMsgJustText = (content: string) => {
   );
 };
 
-export default function Message({ content, role, created_at:createdAt, id, user_id , userId }: Message): React.JSX.Element {
+export default function Message({ content, role = '', createdAt, id, userId, loggedUser }: MsgExt): React.JSX.Element {
   const [updatedMessage, setUpdatedMessage] = useState(content);
   const { toast } = useToast();
   const [isLoadingAudio, setIsLoadingAudio] = useState(false);
@@ -69,7 +74,7 @@ export default function Message({ content, role, created_at:createdAt, id, user_
       sources: audioSources,
     };
   }, [content]);
-  const isUserMsgJustText = user_id === userId && checkUserMsgJustText(content);
+  const isUserMsgJustText = loggedUser === userId && checkUserMsgJustText(content);
 
   return (
     <div id={`message-${id}`} className={cn('m-3 overflow-hidden flex flex-col gap-2 min-w-48', isUserMsgJustText && 'max-w-[60%] self-end')}>
@@ -83,7 +88,7 @@ export default function Message({ content, role, created_at:createdAt, id, user_
       ) : (
         <div
           className={
-            user_id === userId
+            userId === loggedUser
               ? 'chat-log-message-user bg-primary rounded-3xl py-1 rounded-br-none px-5 text-primary-foreground'
               : 'chat-log-message-ai p-0 pt-2 text-foreground'
           }
@@ -92,8 +97,8 @@ export default function Message({ content, role, created_at:createdAt, id, user_
         </div>
       )}
 
-      <div className={cn('flex items-center flex-wrap', user_id === userId && 'flex-row-reverse')}>
-        <CreatedAt createdAt={createdAt} role={role}  user_id={user_id} userId={userId}/>
+      <div className={cn('flex items-center flex-wrap', userId === loggedUser && 'flex-row-reverse')}>
+        <CreatedAt createdAt={createdAt} role={role}  user_id={userId} userId={loggedUser}/>
 
         <MessageActions
           createdAt={createdAt}

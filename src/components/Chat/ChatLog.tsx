@@ -16,8 +16,8 @@ export default function ChatLog({
   userID:string;
 }): React.JSX.Element {
   const messagesEndRef = useRef(null);
-  // const { data: conversation, mutate } = useConversation(conversationID,userID);
-  const {data:messages} = useMessages(conversationID);
+  const { data: conversation, mutate } = useConversation(conversationID,userID);
+  // const {data:messages} = useMessages(conversationID);
 
   const params = useSearchParams();
   let scrollToMessageId = params.get('message') || '';
@@ -59,12 +59,12 @@ export default function ChatLog({
   return (
     <div className='flex flex-col-reverse flex-grow overflow-y-auto bg-background pb-28' style={{ flexBasis: '0px' }}>
       <div className='flex flex-col h-min max-w-100vw'>
-        {messages.length > 0 ? (
-          messages.map((message, index: number) => {
+        {conversation.messages.length > 0 ? (
+          conversation.messages.map((message, index: number) => {
             return (
               <React.Fragment key={message.id}>
-                <Message {...message} userId={userID}/>
-                {/* {message.activities
+                <Message {...message} loggedUser={userID}/>
+                {message.activities
                   .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
                   .filter((x) => x.parentId == null)
                   .map((activity) => (
@@ -74,7 +74,7 @@ export default function ChatLog({
                       alternateBackground={alternateBackground}
                       children={message.activities.filter((x) => x.parentId == activity.id)}
                     />
-                  ))} */}
+                  ))}
               </React.Fragment>
             );
           })
