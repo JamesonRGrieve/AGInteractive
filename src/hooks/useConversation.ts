@@ -21,44 +21,45 @@ import { getCookie } from 'cookies-next';
  * @returns SWR response containing conversation data
  */
 export function useConversation(id: string , userId:string): SWRResponse<Conversation | null> {
+  const client = createGraphQLClient();
+
   return useSWR<Conversation | null>(
-    id ? [`v1/conversation/${id}`, userId] : null,
+    [`/conversation`, id,userId],
     async (): Promise<Conversation | null> => {
-      if (!id || !userId || id === '-') {
+      if (!id || id === '-')
         return {
           messages: [],
         };
-      }
       try {
-        const jwt = getCookie('jwt');
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URI}/v1/conversation/${id}`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${jwt}`,
-            },
-            validateStatus: (status: number) => [200, 403, 404].includes(status),
-          }
-        );
-        const data = response.data.conversation;
-        if (!data || typeof data !== 'object') {
-          return { messages: [] };
-        }
+        const query = ConversationSchema.toGQL(GQLType.Query, { variables: { id: id } });
+        log(['GQL useConversation() Query', query], {
+          client: 3,
+        });
+        log(['GQL useConversation() Conversation ID', id], {
+          client: 3,
+        });
+        const response = await client.request<{ conversation: Conversation }>(query, { id: id });
+        log(['GQL useConversation() Conversations', response], {
+          client: 3,
+        });
+
         // Convert timestamps to local time
-        const conversation = convertTimestampsToLocal(data, ['created_at', 'updated_at', 'deleted_at']);
+        const conversation = convertTimestampsToLocal(response.conversation, ['createdAt', 'updatedAt', 'deletedAt']);
+
         // Convert message timestamps if they exist
         if (conversation.messages) {
           conversation.messages = conversation.messages.map((message: Message) =>
-            convertTimestampsToLocal(message, ['created_at', 'updated_at', 'deleted_at'])
+            convertTimestampsToLocal(message, ['createdAt', 'updatedAt', 'deletedAt']),
           );
         }
+
         if (!conversation.messages) {
           conversation.messages = [];
         }
+
         return conversation;
       } catch (error) {
-        log(['REST useConversation() Error', error], {
+        log(['GQL useConversation() Error', error], {
           client: 1,
         });
         return null;
@@ -68,7 +69,7 @@ export function useConversation(id: string , userId:string): SWRResponse<Convers
       fallbackData: {
         messages: [],
       },
-      //refreshInterval: 1000, // Real-time updates
+      refreshInterval: 5000, // Real-time updates
     },
   );
 }

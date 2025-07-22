@@ -34,7 +34,7 @@ export function VoiceRecorder({ onSend, disabled }: VoiceRecorderProps) {
     reader.onloadend = () => {
       const base64Audio = reader.result as string;
       onSend('', {
-        'recording.wav': base64Audio,
+        'file': base64Audio.replace("data:audio/wav;base64,",""),
       });
     };
     reader.readAsDataURL(wavBlob);

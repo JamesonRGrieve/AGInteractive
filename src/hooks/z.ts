@@ -45,28 +45,28 @@ export const ActivitySchema = z
     body: z.string().min(1),
     state: z.string().optional(),
     messageId: z.string().uuid(),
-    chainStepId: z.string().uuid(),
+    // chainStepId: z.string().uuid(),
     parentId: z.string().uuid().optional(),
     createdAt: z.string(),
-    createdByUser: z.string().uuid(),
+    createdByUserId: z.string().uuid(),
     updatedAt: z.string().optional(),
-    updatedByUser: z.string().uuid().optional(),
-    type: ActivityTypeSchema.optional(),
+    updatedByUserId: z.string().uuid().optional(),
+    // type: ActivityTypeSchema.optional(),
   })
   .describe('Activity');
 // Message schema
 export const MessageSchema = z
   .object({
     id: z.string().uuid(),
-    role: z.string(), // Assuming this matches RoleSchema
+    // role: z.string(), // Assuming this matches RoleSchema
     content: z.string().min(1),
     conversationId: z.string().uuid(),
     userId: z.string().uuid(),
     parentId: z.string().uuid().optional(),
     createdAt: z.string(),
-    createdByUser: z.string().uuid(),
+    createdByUserId: z.string().uuid(),
     updatedAt: z.string().optional(),
-    updatedByUser: z.string().uuid().optional(),
+    updatedByUserId: z.string().uuid().optional(),
     activities: z.array(ActivitySchema).optional(),
   })
   .describe('Message');
@@ -81,7 +81,7 @@ export const ConversationSchema = z
     createdAt: z.string(),
     // createdByUser: z.string().uuid(),
     updatedAt: z.string().optional(),
-    // messages: z.array(MessageSchema).optional(),
+    messages: z.array(MessageSchema).optional(),
   })
   .describe('Conversation');
 
