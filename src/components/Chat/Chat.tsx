@@ -76,8 +76,8 @@ export default function Chat({
             parent: null,
             children: [],
             conversation_id: conversationId,
-            content: messageTextBody,
             user_id: user.id,
+            [!messageTextBody ? 'file' : 'content']:!messageTextBody ? messageAttachedFiles.file : messageTextBody
           },
         },
         {
