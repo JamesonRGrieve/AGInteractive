@@ -14,6 +14,7 @@ import { LuCopy, LuDownload, LuPen as LuEdit, LuTrash2 } from 'react-icons/lu';
 import { mutate } from 'swr';
 import { useConversations } from '../../../hooks/useConversation';
 import JRGDialog from './Dialog';
+import axios from 'axios';
 
 export type MessageProps = {
   chatItem: { role: string; message: string; createdAt: string; rlhf?: { positive: boolean; feedback: string } };
@@ -186,12 +187,16 @@ export function MessageActions({
                   }}
                   title='Edit Message'
                   onConfirm={async () => {
-                    await state.sdk.updateConversationMessage(
-                      convData?.find((item) => item.id === state.overrides.conversation).name,
-                      id,
-                      updatedMessage,
+                    await axios.put(
+                      `${process.env.NEXT_PUBLIC_API_URI}/v1/message/${id}`,
+                      { message: { content: updatedMessage } },
+                      {
+                        headers: {
+                          Authorization: `Bearer ${getCookie('jwt')}`,
+                        },
+                      },
                     );
-                    mutate('/conversation/' + state.overrides.conversation);
+                    mutate('/conversation');
                   }}
                   content={
                     <Textarea
@@ -217,11 +222,12 @@ export function MessageActions({
                     ButtonProps={{ variant: 'ghost', size: 'icon', children: <LuTrash2 /> }}
                     title='Delete Message'
                     onConfirm={async () => {
-                      await state.sdk.deleteConversationMessage(
-                        convData?.find((item) => item.id === state.overrides.conversation).name,
-                        id,
-                      );
-                      mutate('/conversation/' + state.overrides.conversation);
+                      await axios.delete(`${process.env.NEXT_PUBLIC_API_URI}/v1/message/${id}`, {
+                        headers: {
+                          Authorization: `Bearer ${getCookie('jwt')}`,
+                        },
+                      });
+                      mutate('/conversation');
                     }}
                     content={`Are you sure you'd like to permanently delete this message from the conversation?`}
                   />
