@@ -55,7 +55,7 @@ type ActivityIconsProps = {
  * Component for displaying the activity icons and time difference
  */
 const ActivityIcons: React.FC<ActivityIconsProps> = ({ iconState, type, createdAt, updatedAt }) => {
-  const state = typeof(iconState) === 'string' ? iconState : 'thought';
+  const state = typeof iconState === 'string' ? iconState : 'thought';
   const [currentTime] = useState(dayjs().format('YYYY-MM-DDTHH:mm:ssZ'));
 
   return (
@@ -64,7 +64,7 @@ const ActivityIcons: React.FC<ActivityIconsProps> = ({ iconState, type, createdA
       {state ? severities[state.toLowerCase()].icon : <AutorenewOutlined className='animate-spin text-primary' />}
 
       {/* Type icon */}
-      {severities[String(type?.name || 'thought').toLowerCase()]?.icon}
+      {/* {severities[String(type?.name || 'thought').toLowerCase()]?.icon} */}
 
       {/* Time difference */}
       {state?.toLowerCase() !== 'info' && (
@@ -146,7 +146,14 @@ export function ActivityBar({
     return (
       <Tooltip>
         <TooltipTrigger asChild>
-          <ActivityContent title={title} body={body} state={state} type={{ name: 'hello' }} createdAt={createdAt} updatedAt={updatedAt} />
+          <ActivityContent
+            title={title}
+            body={body}
+            state={state}
+            type={{ name: 'hello' }}
+            createdAt={createdAt}
+            updatedAt={updatedAt}
+          />
         </TooltipTrigger>
         <TooltipContent side='bottom' align='start' className='ml-3 mb-7'>
           {formatDate(createdAt, false)}
@@ -158,7 +165,7 @@ export function ActivityBar({
   // Parent activity with children
   return (
     <div
-    id={`activity-${id}`}
+      id={`activity-${id}`}
       className={cn('w-full', !isRoot && 'border-t border-border', alternateBackground === 'primary' ? 'bg-primary/10' : '')}
     >
       <Tooltip>
