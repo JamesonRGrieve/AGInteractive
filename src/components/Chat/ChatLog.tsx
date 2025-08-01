@@ -9,14 +9,14 @@ import { useSearchParams } from 'next/navigation';
 export default function ChatLog({
   conversationID,
   alternateBackground,
-  userID
+  userID,
 }: {
   conversationID: string;
   alternateBackground?: string;
-  userID:string;
+  userID: string;
 }): React.JSX.Element {
   const messagesEndRef = useRef(null);
-  const { data: conversation, mutate } = useConversation(conversationID,userID);
+  const { data: conversation, mutate } = useConversation(conversationID, userID);
   // const {data:messages} = useMessages(conversationID);
 
   const params = useSearchParams();
@@ -59,11 +59,11 @@ export default function ChatLog({
   return (
     <div className='flex flex-col-reverse flex-grow overflow-y-auto bg-background pb-28' style={{ flexBasis: '0px' }}>
       <div className='flex flex-col h-min max-w-100vw'>
-        {conversation.messages.length > 0 ? (
+        {conversation && conversation.messages.length > 0 ? (
           conversation.messages.map((message, index: number) => {
             return (
               <React.Fragment key={message.id}>
-                <Message {...message} loggedUser={userID}/>
+                <Message {...message} loggedUser={userID} />
                 {message.activities
                   .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
                   .filter((x) => x.parentId == null)
