@@ -198,6 +198,9 @@ export function MessageActions({
                     );
                     mutate('/conversation');
                   }}
+                  onClose={() => {
+                    setUpdatedMessage(content)
+                  }}
                   content={
                     <Textarea
                       value={updatedMessage}
