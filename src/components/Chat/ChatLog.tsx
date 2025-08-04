@@ -59,8 +59,8 @@ export default function ChatLog({
   return (
     <div className='flex flex-col-reverse flex-grow overflow-y-auto bg-background pb-28' style={{ flexBasis: '0px' }}>
       <div className='flex flex-col h-min max-w-100vw'>
-        {conversation && conversation.messages.length > 0 ? (
-          conversation.messages.map((message, index: number) => {
+        {conversation && conversation?.messages?.length > 0 ? (
+          conversation?.messages?.map((message, index: number) => {
             return (
               <React.Fragment key={message.id}>
                 <Message {...message} loggedUser={userID} />
