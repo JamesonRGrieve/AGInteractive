@@ -125,6 +125,8 @@ export function ChatSidebar({ conversationID }: { conversationID: string }): Rea
                     setRenaming(false);
                     updateConvo();
                     mutateConversations();
+                    mutate('v1/conversation');
+                    mutate('/conversation');
                   }
                 : () => setRenaming(true),
               disabled:conversationID ? false : true,
